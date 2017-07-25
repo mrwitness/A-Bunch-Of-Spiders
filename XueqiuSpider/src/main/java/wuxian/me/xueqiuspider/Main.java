@@ -4,6 +4,7 @@ import wuxian.me.spidercommon.log.LogManager;
 import wuxian.me.spidersdk.JobManagerConfig;
 import wuxian.me.spidersdk.manager.JobManagerFactory;
 import wuxian.me.xueqiuspider.biz.today.TodayTopSpider;
+import wuxian.me.xueqiuspider.biz.today.TodayZhiboSpider;
 import wuxian.me.xueqiuspider.util.Helper;
 
 /**

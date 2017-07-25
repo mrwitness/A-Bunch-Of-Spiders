@@ -1,10 +1,12 @@
 package wuxian.me.xueqiuspider.biz.today;
 
 
+import com.google.gson.reflect.TypeToken;
 import wuxian.me.spidercommon.log.LogManager;
 import wuxian.me.spidermaster.framework.common.GsonProvider;
 import wuxian.me.spidersdk.BaseSpider;
 import wuxian.me.xueqiuspider.biz.today.model.TodayResponse;
+import wuxian.me.xueqiuspider.biz.today.model.TopItemData;
 
 /**
  * Created by wuxian on 24/7/2017.
@@ -14,7 +16,7 @@ import wuxian.me.xueqiuspider.biz.today.model.TodayResponse;
 public class TodayTopSpider extends AbstractTodaySpider {
 
     public TodayTopSpider() {
-        super(-1);
+        this(-1L);
     }
 
     public TodayTopSpider(Long max_id) {
@@ -23,22 +25,28 @@ public class TodayTopSpider extends AbstractTodaySpider {
 
     @Override
     public int parseRealData(String data) {
-        data = data.replaceAll(TodayTopSpider.REG_REMOVE_2
-                        + "|" + TodayTopSpider.REG_REMOVE
-                        + "|" + TodayTopSpider.REG_REMOVE_3
-                        + "|" + TodayTopSpider.REG_REMOVE_4
-                        + "|" + TodayTopSpider.REG_REMOVE_5
-                        + "|" + TodayTopSpider.REG_REMOVE_6
+        data = data.replaceAll(REG_REMOVE_1
+                        + "|" + REG_REMOVE_2
+                        + "|" + REG_REMOVE_3
+                        + "|" + REG_REMOVE_4
+                        + "|" + REG_REMOVE_5
+                        + "|" + REG_REMOVE_6
                 , "\"");
-        data = data.replaceAll(TodayTopSpider.REG_REMOVE_7, "}");
-        data = data.replaceAll(TodayTopSpider.REG_REMOVE_8, "{");
+        data = data.replaceAll(REG_REMOVE_7, "}");
+        data = data.replaceAll(REG_REMOVE_8, "{");
         LogManager.info(data);
-        TodayResponse res = GsonProvider.gson().fromJson(data, TodayResponse.class);
+        TodayResponse res = GsonProvider.gson().fromJson(data, new TypeToken<TodayResponse<TopItemData>>() {
+        }.getType());
+        if (res == null) {
+            return BaseSpider.RET_MAYBE_BLOCK;
+        }
         LogManager.info(res.toString());
+
         return BaseSpider.RET_SUCCESS;
     }
 
-    public static String REG_REMOVE = "\\\\\"(?=:)";
+
+    public static String REG_REMOVE_1 = "\\\\\"(?=:)";
 
     public static String REG_REMOVE_2 = "(?<=\\{)\\\\\"";
 

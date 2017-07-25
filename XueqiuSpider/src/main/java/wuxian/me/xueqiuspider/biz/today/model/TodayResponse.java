@@ -5,13 +5,13 @@ import java.util.List;
 /**
  * Created by wuxian on 24/7/2017.
  */
-public class TodayResponse {
+public class TodayResponse<T> {
 
     public Long next_max_id;
 
     public Long next_id;
 
-    public List<TodayItem> list;
+    public List<TodayItem<T>> list;
 
     @Override
     public String toString() {

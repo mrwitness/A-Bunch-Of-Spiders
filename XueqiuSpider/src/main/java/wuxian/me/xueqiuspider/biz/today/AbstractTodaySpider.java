@@ -2,7 +2,11 @@ package wuxian.me.xueqiuspider.biz.today;
 
 import okhttp3.HttpUrl;
 import okhttp3.Request;
+import wuxian.me.spidercommon.log.LogManager;
+import wuxian.me.spidermaster.framework.common.GsonProvider;
+import wuxian.me.spidersdk.BaseSpider;
 import wuxian.me.xueqiuspider.biz.BaseXueqiuSpider;
+import wuxian.me.xueqiuspider.biz.today.model.TodayResponse;
 import wuxian.me.xueqiuspider.util.Helper;
 
 /**
@@ -51,10 +55,6 @@ public abstract class AbstractTodaySpider extends BaseXueqiuSpider {
                 .build();
         return request;
     }
-
-    @Override
-    public abstract int parseRealData(String s) ;
-
     @Override
     public abstract String name() ;
 }
