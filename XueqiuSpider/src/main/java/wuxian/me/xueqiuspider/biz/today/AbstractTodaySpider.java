@@ -57,4 +57,38 @@ public abstract class AbstractTodaySpider extends BaseXueqiuSpider {
     }
     @Override
     public abstract String name() ;
+
+    public static String REG_REMOVE_1 = "\\\\\"(?=:)";
+
+    public static String REG_REMOVE_2 = "(?<=\\{)\\\\\"";
+
+    public static String REG_REMOVE_3 = "(?<=,)\\\\\"";
+
+    public static String REG_REMOVE_4 = "(?<=:)\\\\\"";
+
+    public static String REG_REMOVE_5 = "\\\\\"(?=,)";
+
+    public static String REG_REMOVE_6 = "\\\\\"(?=})";
+
+    public static String REG_REMOVE_7 = "}\\\"";
+
+    public static String REG_REMOVE_8 = "\\\"[{]";
+
+    protected final String formatToRightJson(String origin) {
+
+        if (origin == null || origin.length() == 0) {
+            return origin;
+        }
+
+        origin = origin.replaceAll(REG_REMOVE_1
+                        + "|" + REG_REMOVE_2
+                        + "|" + REG_REMOVE_3
+                        + "|" + REG_REMOVE_4
+                        + "|" + REG_REMOVE_5
+                        + "|" + REG_REMOVE_6
+                , "\"");
+        origin = origin.replaceAll(REG_REMOVE_7, "}");
+        origin = origin.replaceAll(REG_REMOVE_8, "{");
+        return origin;
+    }
 }

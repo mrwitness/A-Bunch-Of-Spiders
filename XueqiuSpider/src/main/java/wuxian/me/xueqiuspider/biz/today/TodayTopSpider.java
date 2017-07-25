@@ -25,15 +25,9 @@ public class TodayTopSpider extends AbstractTodaySpider {
 
     @Override
     public int parseRealData(String data) {
-        data = data.replaceAll(REG_REMOVE_1
-                        + "|" + REG_REMOVE_2
-                        + "|" + REG_REMOVE_3
-                        + "|" + REG_REMOVE_4
-                        + "|" + REG_REMOVE_5
-                        + "|" + REG_REMOVE_6
-                , "\"");
-        data = data.replaceAll(REG_REMOVE_7, "}");
-        data = data.replaceAll(REG_REMOVE_8, "{");
+
+        data = formatToRightJson(data);
+
         LogManager.info(data);
         TodayResponse res = GsonProvider.gson().fromJson(data, new TypeToken<TodayResponse<TopItemData>>() {
         }.getType());
@@ -44,23 +38,6 @@ public class TodayTopSpider extends AbstractTodaySpider {
 
         return BaseSpider.RET_SUCCESS;
     }
-
-
-    public static String REG_REMOVE_1 = "\\\\\"(?=:)";
-
-    public static String REG_REMOVE_2 = "(?<=\\{)\\\\\"";
-
-    public static String REG_REMOVE_3 = "(?<=,)\\\\\"";
-
-    public static String REG_REMOVE_4 = "(?<=:)\\\\\"";
-
-    public static String REG_REMOVE_5 = "\\\\\"(?=,)";
-
-    public static String REG_REMOVE_6 = "\\\\\"(?=})";
-
-    public static String REG_REMOVE_7 = "}\\\"";
-
-    public static String REG_REMOVE_8 = "\\\"[{]";
 
     @Override
     public String name() {

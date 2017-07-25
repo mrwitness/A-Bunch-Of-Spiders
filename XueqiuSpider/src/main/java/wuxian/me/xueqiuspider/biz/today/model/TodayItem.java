@@ -9,14 +9,18 @@ public class TodayItem<T> {
 
     public Integer category;
 
-    public T data;
+    public String column;
 
     @Override
     public String toString() {
         return "TodayItem{" +
                 "id=" + id +
                 ", category=" + category +
+                ", column='" + column + '\'' +
                 ", data=" + data +
                 '}';
     }
+
+    public T data;
+
 }

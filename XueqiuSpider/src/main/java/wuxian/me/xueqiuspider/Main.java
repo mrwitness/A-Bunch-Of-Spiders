@@ -23,6 +23,6 @@ public class Main {
             ;
         }
 
-        Helper.dispatchSpider(new TodayTopSpider());
+        Helper.dispatchSpider(new TodayZhiboSpider());
     }
 }
