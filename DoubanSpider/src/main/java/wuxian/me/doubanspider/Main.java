@@ -38,8 +38,8 @@ public class Main {
             ;
         }
 
-        //Helper.dispatchSpider(new GroupListSpider(145219L, 1));
+        //Helper.dispatchSpider(new GroupListSpider(145219L, 0));
 
-        Helper.dispatchSpider(new GroupTopicSpider(105236658L));
+        Helper.dispatchSpider(new GroupTopicSpider(92351212L));
     }
 }

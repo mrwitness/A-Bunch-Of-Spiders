@@ -2,6 +2,8 @@ package wuxian.me.doubanspider.model;
 
 /**
  * Created by wuxian on 26/7/2017.
+ * Todo:几室几厅,楼层,朝向
+ * Todo:过滤女性等...
  */
 public class GroupTiezi extends BaseModel {
 
@@ -35,6 +37,10 @@ public class GroupTiezi extends BaseModel {
     public String guessWechat;
 
     public String guessPhone;
+
+    public Long created;
+
+    public Long updated;
 
     @Override
     public String name() {

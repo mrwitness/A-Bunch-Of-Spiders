@@ -42,6 +42,13 @@ public class MainTest {
 
     }
 
+    @Test
+    public void testTransform() {
+        String s = "hellp";
+
+        System.out.println(Integer.parseInt(s));
+    }
+
     private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 

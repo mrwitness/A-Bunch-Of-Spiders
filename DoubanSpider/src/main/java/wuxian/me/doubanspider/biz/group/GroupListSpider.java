@@ -84,7 +84,6 @@ public class GroupListSpider extends BaseDoubanSpider {
         }
     }
 
-    //return topicId
     private Long parseItem(Node node, boolean lastItem) throws MaybeBlockedException
             , ParserException {
 
@@ -101,8 +100,6 @@ public class GroupListSpider extends BaseDoubanSpider {
                 }
 
                 topId = matchedLong(TOPIC_ID_PATTERN, removeAllBlanks(child.getText()));
-                LogManager.info("topId:" + topId);
-                //LogManager.info("title:" + removeAllBlanks(child.toPlainTextString()));
 
             } else if (child instanceof TableColumn && child.getText().trim().contains("nowrap")) {
 
@@ -112,31 +109,20 @@ public class GroupListSpider extends BaseDoubanSpider {
                         String time = child.toPlainTextString().trim();
                         if (GroupListSpider.TIME_PATTERN.matcher(time).matches()) {
                             time = "2017-" + time;
-                            //Integer formatedTime = StringUtil.formatYYMMDD8(time.substring(0, 10)); //用于存入数据库
-                            //LogManager.info("time:" + formatedTime);
                             try {
                                 Date date = sdf.parse(time);
-                                if (new Date().getTime() - date.getTime() < 1000 * 60 * 60 * 24 * 7 * 3) {
+                                if (new Date().getTime() - date.getTime() < 1000 * 60 * 60 * 1 * 1 * 1) {
                                     Helper.dispatchSpider(new GroupListSpider(groupId, page + 1));
                                 }
                             } catch (ParseException e) {
                                 ;
                             }
+                        } else {
+                            Helper.dispatchSpider(new GroupListSpider(groupId, page + 1));
                         }
                     }
 
                 }
-                /*else if (child.getText().trim().contains("class=\"\"")) {   //这部分逻辑移到@GroupTopicSpider
-                    LogManager.info("response:" + child.toPlainTextString().trim());
-                } else {
-                    child = firstChildOfType(child.getChildren(), LinkTag.class);
-                    if (child == null) {
-                        throw new MaybeBlockedException();
-                    }
-                    LogManager.info("author:" + matchedLong(AUTHER_ID_PATTERN, removeAllBlanks(child.getText())));
-                    LogManager.info(child.toPlainTextString().trim());
-                }
-                */
             }
         }
 

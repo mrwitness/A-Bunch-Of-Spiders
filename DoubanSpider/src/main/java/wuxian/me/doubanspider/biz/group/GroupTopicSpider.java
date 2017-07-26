@@ -11,6 +11,7 @@ import org.htmlparser.util.ParserException;
 import wuxian.me.doubanspider.biz.BaseDoubanSpider;
 import wuxian.me.doubanspider.model.GroupTiezi;
 import wuxian.me.doubanspider.util.Helper;
+import wuxian.me.doubanspider.util.SpringBeans;
 import wuxian.me.spidercommon.log.LogManager;
 import wuxian.me.spidercommon.util.NodeLogUtil;
 import wuxian.me.spidercommon.util.StringUtil;
@@ -97,7 +98,8 @@ public class GroupTopicSpider extends BaseDoubanSpider {
             return;
         }
 
-        if (!user.getText().trim().contains(String.valueOf(tiezi.authorId))) {
+        String au = tiezi.authorId != null ? String.valueOf(tiezi.authorId) : authorName;
+        if (!user.getText().trim().contains(au)) {
             int num = tiezi.otherReplyNum == null ? 0 : tiezi.otherReplyNum;
             tiezi.otherReplyNum = ++num;
             return;//过滤掉非作者的评论
@@ -121,7 +123,10 @@ public class GroupTopicSpider extends BaseDoubanSpider {
                 if (rep.length() < 5 && matchedString(MAYBE_PRICE_PATTERN, rep) == null) {
                     ;
                 } else {
-                    replyList.add(rep);
+                    if (!replyList.contains(rep)) {
+                        replyList.add(rep);
+                    }
+
                 }
                 break;
             }
@@ -146,7 +151,7 @@ public class GroupTopicSpider extends BaseDoubanSpider {
     public static final Pattern MAYBE_PHONE_PATTERN = Pattern.compile(REG_MAYBE_PHONE);
 
 
-    private static final String REG_AUTHOR_ID = "(?<=people/)\\d+";
+    private static final String REG_AUTHOR_ID = "(?<=people/)[0-9a-zA-Z]+";
     public static final Pattern AUTHOR_ID_PATTERN = Pattern.compile(REG_AUTHOR_ID);
 
 
@@ -164,6 +169,8 @@ public class GroupTopicSpider extends BaseDoubanSpider {
         tiezi.title = node.toPlainTextString().trim();
     }
 
+    private String authorName = null;
+
     private void parseAuthor(String data) throws MaybeBlockedException, ParserException {
         Parser parser = new Parser(data);
         parser.setEncoding("utf-8");
@@ -176,9 +183,15 @@ public class GroupTopicSpider extends BaseDoubanSpider {
             throw new MaybeBlockedException();
         }
         tiezi.author = author.toPlainTextString().trim();
-        tiezi.authorId = matchedLong(AUTHOR_ID_PATTERN, author.getText().trim());
+
+        try {
+            tiezi.authorId = matchedLong(AUTHOR_ID_PATTERN, author.getText().trim());
+        } catch (NumberFormatException e) {
+            tiezi.authorId = null;
+        }
+
         if (tiezi.authorId == null) {
-            throw new MaybeBlockedException();
+            authorName = matchedString(AUTHOR_ID_PATTERN, author.getText().trim());
         }
 
         while ((node = node.getNextSibling()) != null) {
@@ -207,7 +220,14 @@ public class GroupTopicSpider extends BaseDoubanSpider {
                 int end = matcher.end();
                 if (end < content.length()) {
                     char c = content.charAt(end);
-                    if (c >= '0' && c <= '9' || c == '米') {  //要么是手机号码的中间值 要么距离xxx xxx米
+                    if (c >= '0' && c <= '9' || c == '米' || c == '号') {  //要么是手机号码的中间值 要么距离xxx xxx米
+                        continue;
+                    }
+                }
+                int start = matcher.start() - 1;
+                if (start >= 0) {
+                    char c = content.charAt(start);
+                    if (c >= '0' && c <= '9') {  //是手机号码的中间值
                         continue;
                     }
                 }
@@ -271,6 +291,10 @@ public class GroupTopicSpider extends BaseDoubanSpider {
             }
 
             LogManager.info(tiezi.toString());
+            tiezi.created = System.currentTimeMillis();
+            tiezi.updated = tiezi.created;
+
+            SpringBeans.groupTieziMapper().insertTiezi(tiezi);
 
         } catch (MaybeBlockedException e) {
             return BaseSpider.RET_MAYBE_BLOCK;
