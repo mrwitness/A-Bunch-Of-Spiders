@@ -5,7 +5,6 @@ import wuxian.me.spidercommon.log.LogManager;
 import wuxian.me.spidermaster.framework.common.GsonProvider;
 import wuxian.me.spidersdk.BaseSpider;
 import wuxian.me.xueqiuspider.biz.today.model.TodayResponse;
-import wuxian.me.xueqiuspider.biz.today.model.TopItemData;
 import wuxian.me.xueqiuspider.biz.today.model.ZhiboItemData;
 
 /**
