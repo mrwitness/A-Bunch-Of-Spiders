@@ -19,6 +19,18 @@ public class GroupTiezi extends BaseModel {
 
     public Long postTime;
 
+    public Integer selfReplyNum;
+
+    public Integer otherReplyNum;
+
+    public String replyContent;
+
+    public Integer guessPrice;
+
+    public String guessWechat;
+
+    public String guessPhone;
+
     @Override
     public String name() {
         return "GroupTiezi{" +

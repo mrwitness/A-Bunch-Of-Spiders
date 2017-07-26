@@ -39,6 +39,7 @@ public class Main {
         }
 
         //Helper.dispatchSpider(new GroupListSpider(145219L, 1));
-        Helper.dispatchSpider(new GroupTopicSpider(105236658L, 163499610L));
+
+        Helper.dispatchSpider(new GroupTopicSpider(105236658L));
     }
 }

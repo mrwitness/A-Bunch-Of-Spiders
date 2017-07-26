@@ -5,10 +5,7 @@ import okhttp3.Request;
 import org.htmlparser.Node;
 import org.htmlparser.Parser;
 import org.htmlparser.filters.HasAttributeFilter;
-import org.htmlparser.tags.Bullet;
-import org.htmlparser.tags.Div;
-import org.htmlparser.tags.LinkTag;
-import org.htmlparser.tags.ParagraphTag;
+import org.htmlparser.tags.*;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
 import wuxian.me.doubanspider.biz.BaseDoubanSpider;
@@ -37,9 +34,8 @@ public class GroupTopicSpider extends BaseDoubanSpider {
 
     private Long authorId;
 
-    public GroupTopicSpider(Long topId, Long authorId) {
+    public GroupTopicSpider(Long topId) {
         this.topicId = topId;
-        this.authorId = authorId;
     }
 
     @Override
@@ -131,10 +127,57 @@ public class GroupTopicSpider extends BaseDoubanSpider {
     public static final Pattern MAYBE_WECHAT_PATTERN = Pattern.compile(REG_MAYBE_WECHAT);
 
 
+    private static final String REG_AUTHOR_ID = "(?<=people/)\\d+";
+    public static final Pattern AUTHOR_ID_PATTERN = Pattern.compile(REG_AUTHOR_ID);
+
+
+    private void parseTitle(String data) throws MaybeBlockedException, ParserException {
+        Parser parser = new Parser(data);
+        parser.setEncoding("utf-8");
+        HasAttributeFilter filter = new HasAttributeFilter("id", "content");
+
+        Node node = firstChildIfNullThrow(parser.extractAllNodesThatMatch(filter));
+
+        node = firstChildOfType(node.getChildren(), HeadingTag.class);
+        if (node == null) {
+            throw new MaybeBlockedException();
+        }
+        LogManager.info("title:" + node.toPlainTextString().trim());
+    }
+
+    private void parseAuthor(String data) throws MaybeBlockedException, ParserException {
+        Parser parser = new Parser(data);
+        parser.setEncoding("utf-8");
+        HasAttributeFilter filter = new HasAttributeFilter("class", "from");
+
+        Node node = firstChildIfNullThrow(parser.extractAllNodesThatMatch(filter));
+
+        Node author = firstChildOfType(node.getChildren(), LinkTag.class);
+        if (author == null) {
+            throw new MaybeBlockedException();
+        }
+        LogManager.info("author:" + author.toPlainTextString().trim());
+        LogManager.info("author id:" + matchedString(AUTHOR_ID_PATTERN, author.getText().trim()));
+        authorId = matchedLong(AUTHOR_ID_PATTERN, author.getText().trim());
+        if (authorId == null) {
+            throw new MaybeBlockedException();
+        }
+
+        while ((node = node.getNextSibling()) != null) {
+            if (node instanceof Span && node.getText().trim().contains("color-green")) {
+                LogManager.info("postTime:" + StringUtil.removeAllBlanks(node.toPlainTextString()));
+                break;
+            }
+        }
+
+    }
+
     @Override
     public int parseRealData(String data) {
 
         try {
+            parseTitle(data);
+            parseAuthor(data);
             parseTopicContent(data);
             parseCommentList(data);
 
