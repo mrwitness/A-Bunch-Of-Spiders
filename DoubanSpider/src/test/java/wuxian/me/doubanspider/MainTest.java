@@ -19,15 +19,27 @@ import static org.junit.Assert.*;
  */
 public class MainTest {
 
+    @Test
+    public void testPrice() {
+        String s = "1980dfasdaffa987";
+
+        Matcher matcher = GroupTopicSpider.MAYBE_PRICE_PATTERN.matcher(s);
+        while (matcher.find()) {
+            LogManager.info(matcher.group());
+        }
+    }
 
     @Test
     public void testWechat() {
-        String s = "dafdafasf.........";
+        String s = "微信号是dafdafasf.........";
 
+        ///s = "wechat:5343dfada....";
         LogManager.info(ParsingUtil.matchedString(GroupTopicSpider.MAYBE_WECHAT_PATTERN, s));
 
-        s = "135DAFDSAF";
-        LogManager.info(ParsingUtil.matchedString(GroupTopicSpider.MAYBE_PRICE_PATTERN, s));
+        s = "phonenumber:1768732";
+        s = "电话8888777";
+        LogManager.info(ParsingUtil.matchedString(GroupTopicSpider.MAYBE_PHONE_PATTERN, s));
+
     }
 
     private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");

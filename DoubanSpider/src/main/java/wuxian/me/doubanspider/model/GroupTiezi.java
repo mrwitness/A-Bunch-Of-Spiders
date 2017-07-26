@@ -11,13 +11,15 @@ public class GroupTiezi extends BaseModel {
 
     public String title;
 
+    public String content;
+
     public String author;
 
     public Long authorId;
 
-    public Integer responseNum;
-
     public Long postTime;
+
+    public Integer pictureNum;
 
     public Integer selfReplyNum;
 
@@ -26,6 +28,9 @@ public class GroupTiezi extends BaseModel {
     public String replyContent;
 
     public Integer guessPrice;
+
+    //比如1500-1600
+    public String guessPrices;
 
     public String guessWechat;
 
@@ -38,8 +43,16 @@ public class GroupTiezi extends BaseModel {
                 ", title='" + title + '\'' +
                 ", author='" + author + '\'' +
                 ", authorId=" + authorId +
-                ", responseNum=" + responseNum +
                 ", postTime=" + postTime +
+                ", pictureNum=" + pictureNum +
+                ", selfReplyNum=" + selfReplyNum +
+                ", otherReplyNum=" + otherReplyNum +
+                ", replyContent='" + replyContent + '\'' +
+                ", guessPrice=" + guessPrice +
+                ", guessPrices='" + guessPrices + '\'' +
+                ", guessWechat='" + guessWechat + '\'' +
+                ", guessPhone='" + guessPhone + '\'' +
+                ", content='" + content + '\'' +
                 '}';
     }
 
