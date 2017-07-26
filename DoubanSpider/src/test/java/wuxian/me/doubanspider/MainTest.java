@@ -2,6 +2,7 @@ package wuxian.me.doubanspider;
 
 import org.junit.Test;
 import wuxian.me.doubanspider.biz.group.GroupListSpider;
+import wuxian.me.doubanspider.biz.group.GroupTopicSpider;
 import wuxian.me.spidercommon.log.LogManager;
 import wuxian.me.spidercommon.util.ParsingUtil;
 import wuxian.me.spidercommon.util.StringUtil;
@@ -17,6 +18,17 @@ import static org.junit.Assert.*;
  * Created by wuxian on 24/7/2017.
  */
 public class MainTest {
+
+
+    @Test
+    public void testWechat() {
+        String s = "dafdafasf.........";
+
+        LogManager.info(ParsingUtil.matchedString(GroupTopicSpider.MAYBE_WECHAT_PATTERN, s));
+
+        s = "135DAFDSAF";
+        LogManager.info(ParsingUtil.matchedString(GroupTopicSpider.MAYBE_PRICE_PATTERN, s));
+    }
 
     private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 

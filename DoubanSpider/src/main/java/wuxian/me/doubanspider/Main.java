@@ -2,6 +2,7 @@ package wuxian.me.doubanspider;
 
 import wuxian.me.doubanspider.biz.BizConfig;
 import wuxian.me.doubanspider.biz.group.GroupListSpider;
+import wuxian.me.doubanspider.biz.group.GroupTopicSpider;
 import wuxian.me.doubanspider.model.GroupTiezi;
 import wuxian.me.doubanspider.save.GroupConfig;
 import wuxian.me.doubanspider.util.Helper;
@@ -38,5 +39,6 @@ public class Main {
         }
 
         //Helper.dispatchSpider(new GroupListSpider(145219L, 1));
+        Helper.dispatchSpider(new GroupTopicSpider(105236658L, 163499610L));
     }
 }

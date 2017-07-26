@@ -13,7 +13,6 @@ import org.htmlparser.util.ParserException;
 import wuxian.me.doubanspider.biz.BaseDoubanSpider;
 import wuxian.me.doubanspider.util.Helper;
 import wuxian.me.spidercommon.log.LogManager;
-import wuxian.me.spidercommon.util.NodeLogUtil;
 import wuxian.me.spidercommon.util.StringUtil;
 import wuxian.me.spidersdk.BaseSpider;
 import wuxian.me.spidersdk.anti.MaybeBlockedException;
@@ -57,7 +56,7 @@ public class GroupListSpider extends BaseDoubanSpider {
         return request;
     }
 
-    private void parseXiaoquList(String data) throws MaybeBlockedException, ParserException {
+    private void parseGroupList(String data) throws MaybeBlockedException, ParserException {
         Parser parser = new Parser(data);
         parser.setEncoding("utf-8");
         HasAttributeFilter filter = new HasAttributeFilter("class", "olt");
@@ -149,7 +148,7 @@ public class GroupListSpider extends BaseDoubanSpider {
     public int parseRealData(String data) {
 
         try {
-            parseXiaoquList(data);
+            parseGroupList(data);
 
         } catch (MaybeBlockedException e) {
             return BaseSpider.RET_MAYBE_BLOCK;
