@@ -70,7 +70,7 @@ public class GroupListSpider extends BaseDoubanSpider {
 
             if (child instanceof TableRow && !child.getText().trim().contains("class=\"th\"")) {
                 parseItem(child, (i + 1 == list.size()));
-                break;
+
             }
         }
     }
@@ -106,13 +106,13 @@ public class GroupListSpider extends BaseDoubanSpider {
                         time = "2017-" + time;
                         Integer formatedTime = StringUtil.formatYYMMDD8(time.substring(0, 10)); //用于存入数据库
 
-                        if (lastItem) {
+                        LogManager.info("time:" + formatedTime);
+                        if (lastItem && false) {
                             try {
                                 Date date = sdf.parse(time);
                                 if (new Date().getTime() - date.getTime() < 1000 * 60 * 60 * 24 * 7 * 3) {
                                     Helper.dispatchSpider(new GroupListSpider(groupId, page + 1));
                                 }
-
                             } catch (ParseException e) {
                                 ;
                             }
@@ -124,6 +124,7 @@ public class GroupListSpider extends BaseDoubanSpider {
                         throw new MaybeBlockedException();
                     }
                     LogManager.info("author:" + matchedLong(AUTHER_ID_PATTERN, removeAllBlanks(child.getText())));
+                    LogManager.info(child.toPlainTextString().trim());
                 }
             }
         }

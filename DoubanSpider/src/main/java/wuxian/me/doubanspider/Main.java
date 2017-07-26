@@ -1,8 +1,13 @@
 package wuxian.me.doubanspider;
 
+import wuxian.me.doubanspider.biz.BizConfig;
 import wuxian.me.doubanspider.biz.group.GroupListSpider;
+import wuxian.me.doubanspider.model.GroupTiezi;
+import wuxian.me.doubanspider.save.GroupConfig;
 import wuxian.me.doubanspider.util.Helper;
+import wuxian.me.doubanspider.util.SpringBeans;
 import wuxian.me.spidercommon.log.LogManager;
+import wuxian.me.spidercommon.util.SignalManager;
 import wuxian.me.spidersdk.JobManagerConfig;
 import wuxian.me.spidersdk.manager.JobManagerFactory;
 
@@ -11,7 +16,17 @@ import wuxian.me.spidersdk.manager.JobManagerFactory;
  */
 public class Main {
 
+    private static void initEnv() {
+        SpringBeans.init();
+        BizConfig.init();
+        GroupConfig.init();
+
+        SpringBeans.groupTieziMapper().createNewTableIfNeed(new GroupTiezi());
+    }
+
     public static void main(String[] args) {
+
+        initEnv();
         LogManager.info("start Jobmanager");
         JobManagerConfig.init();
         JobManagerFactory.getJobManager().start();  //Must be called before any biz!!
@@ -22,6 +37,6 @@ public class Main {
             ;
         }
 
-        Helper.dispatchSpider(new GroupListSpider(145219L, 1));
+        //Helper.dispatchSpider(new GroupListSpider(145219L, 1));
     }
 }
