@@ -1,5 +1,6 @@
 package wuxian.me.doubanspider.biz.group;
 
+import com.sun.org.apache.regexp.internal.RE;
 import okhttp3.HttpUrl;
 import okhttp3.Request;
 import org.htmlparser.Node;
@@ -13,6 +14,7 @@ import org.htmlparser.util.ParserException;
 import wuxian.me.doubanspider.biz.BaseDoubanSpider;
 import wuxian.me.doubanspider.util.Helper;
 import wuxian.me.spidercommon.log.LogManager;
+import wuxian.me.spidercommon.model.HttpUrlNode;
 import wuxian.me.spidercommon.util.StringUtil;
 import wuxian.me.spidersdk.BaseSpider;
 import wuxian.me.spidersdk.anti.MaybeBlockedException;
@@ -38,6 +40,27 @@ public class GroupListSpider extends BaseDoubanSpider {
 
     private Long groupId;
     private int page;
+
+    public static HttpUrlNode toUrlNode(GroupListSpider spider) {
+        HttpUrlNode node = new HttpUrlNode();
+
+        node.baseUrl = API + spider.groupId + API_POST;
+        node.httpGetParam.put("start", String.valueOf(spider.page));
+        return node;
+    }
+
+    public static GroupListSpider fromUrlNode(HttpUrlNode node) {
+
+        if (!node.baseUrl.contains(API) || !node.baseUrl.contains(API_POST)) {
+            return null;
+        }
+        Long id = matchedLong(NODE_GROUPID_PATTERN, node.baseUrl);
+        return new GroupListSpider(id, Integer.parseInt(node.httpGetParam.get("start")));
+    }
+
+    private static final String REG_NODE_GROUPID = "(?<=group/)\\d+";
+    private static final Pattern NODE_GROUPID_PATTERN = Pattern.compile(REG_NODE_GROUPID);
+
 
     public GroupListSpider(Long groupId, int page) {
         this.groupId = groupId;

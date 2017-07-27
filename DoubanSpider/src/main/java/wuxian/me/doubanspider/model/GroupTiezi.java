@@ -2,8 +2,7 @@ package wuxian.me.doubanspider.model;
 
 /**
  * Created by wuxian on 26/7/2017.
- * Todo:几室几厅,楼层,朝向
- * Todo:过滤女性等...
+ * Todo:押几付几
  */
 public class GroupTiezi extends BaseModel {
 
@@ -17,7 +16,7 @@ public class GroupTiezi extends BaseModel {
 
     public String author;
 
-    public Long authorId;
+    public String authorId;
 
     public Long postTime;
 
@@ -42,13 +41,37 @@ public class GroupTiezi extends BaseModel {
 
     public Long updated;
 
+    //几室
+    public Integer shiNum;
+
+    //几厅
+    public Integer tingNum;
+
+    public Integer weiNum;
+
+    //朝向
+    public String chaoxiang;
+
+    //几楼
+    public Integer louceng;
+
+    //0:只限女生 1:只限男生 2:男女不限
+    public Integer sex;
+
+    //sex不一定是准确的
+    public String guessSex;
+
+    //是否有厨房
+    //public Boolean hasChufang;
+
     @Override
     public String name() {
         return "GroupTiezi{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
                 ", author='" + author + '\'' +
-                ", authorId=" + authorId +
+                ", authorId='" + authorId + '\'' +
                 ", postTime=" + postTime +
                 ", pictureNum=" + pictureNum +
                 ", selfReplyNum=" + selfReplyNum +
@@ -58,7 +81,15 @@ public class GroupTiezi extends BaseModel {
                 ", guessPrices='" + guessPrices + '\'' +
                 ", guessWechat='" + guessWechat + '\'' +
                 ", guessPhone='" + guessPhone + '\'' +
-                ", content='" + content + '\'' +
+                ", created=" + created +
+                ", updated=" + updated +
+                ", shiNum=" + shiNum +
+                ", tingNum=" + tingNum +
+                ", weiNum=" + weiNum +
+                ", chaoxiang='" + chaoxiang + '\'' +
+                ", louceng=" + louceng +
+                ", sex=" + sex +
+                ", guessSex='" + guessSex + '\'' +
                 '}';
     }
 

@@ -13,6 +13,7 @@ import wuxian.me.doubanspider.model.GroupTiezi;
 import wuxian.me.doubanspider.util.Helper;
 import wuxian.me.doubanspider.util.SpringBeans;
 import wuxian.me.spidercommon.log.LogManager;
+import wuxian.me.spidercommon.model.HttpUrlNode;
 import wuxian.me.spidercommon.util.NodeLogUtil;
 import wuxian.me.spidercommon.util.StringUtil;
 import wuxian.me.spidersdk.BaseSpider;
@@ -38,6 +39,22 @@ public class GroupTopicSpider extends BaseDoubanSpider {
     private GroupTiezi tiezi = new GroupTiezi();
 
     private Long topicId;
+
+    public static HttpUrlNode toUrlNode(GroupTopicSpider spider) {
+        HttpUrlNode node = new HttpUrlNode();
+        node.baseUrl = API + spider.topicId;
+        return node;
+    }
+
+    public static GroupTopicSpider fromUrlNode(HttpUrlNode node) {
+        if (!node.baseUrl.contains(API)) {
+            return null;
+        }
+        return new GroupTopicSpider(matchedLong(NODE_GROUPID_PATTERN, node.baseUrl));
+    }
+
+    private static final String REG_NODE_GROUPID = "(?<=topic/)\\d+";
+    private static final Pattern NODE_GROUPID_PATTERN = Pattern.compile(REG_NODE_GROUPID);
 
     public GroupTopicSpider(Long topId) {
         this.topicId = topId;
@@ -98,8 +115,7 @@ public class GroupTopicSpider extends BaseDoubanSpider {
             return;
         }
 
-        String au = tiezi.authorId != null ? String.valueOf(tiezi.authorId) : authorName;
-        if (!user.getText().trim().contains(au)) {
+        if (!user.getText().trim().contains(tiezi.authorId)) {
             int num = tiezi.otherReplyNum == null ? 0 : tiezi.otherReplyNum;
             tiezi.otherReplyNum = ++num;
             return;//过滤掉非作者的评论
@@ -150,10 +166,8 @@ public class GroupTopicSpider extends BaseDoubanSpider {
     private static final String REG_MAYBE_PHONE = "(手机|电话)(号码)?(是)?[:：]?[0-9A-Za-z]{5,12}|[pP][hH][oO][nN][eE]([nN][uU][mM][bB][eE][rR])?(是)?[:：]?[0-9A-Za-z]{5,12}";
     public static final Pattern MAYBE_PHONE_PATTERN = Pattern.compile(REG_MAYBE_PHONE);
 
-
     private static final String REG_AUTHOR_ID = "(?<=people/)[0-9a-zA-Z]+";
     public static final Pattern AUTHOR_ID_PATTERN = Pattern.compile(REG_AUTHOR_ID);
-
 
     private void parseTitle(String data) throws MaybeBlockedException, ParserException {
         Parser parser = new Parser(data);
@@ -169,7 +183,6 @@ public class GroupTopicSpider extends BaseDoubanSpider {
         tiezi.title = node.toPlainTextString().trim();
     }
 
-    private String authorName = null;
 
     private void parseAuthor(String data) throws MaybeBlockedException, ParserException {
         Parser parser = new Parser(data);
@@ -184,14 +197,9 @@ public class GroupTopicSpider extends BaseDoubanSpider {
         }
         tiezi.author = author.toPlainTextString().trim();
 
-        try {
-            tiezi.authorId = matchedLong(AUTHOR_ID_PATTERN, author.getText().trim());
-        } catch (NumberFormatException e) {
-            tiezi.authorId = null;
-        }
-
+        tiezi.authorId = matchedString(AUTHOR_ID_PATTERN, author.getText().trim());
         if (tiezi.authorId == null) {
-            authorName = matchedString(AUTHOR_ID_PATTERN, author.getText().trim());
+            throw new MaybeBlockedException();
         }
 
         while ((node = node.getNextSibling()) != null) {
@@ -259,6 +267,17 @@ public class GroupTopicSpider extends BaseDoubanSpider {
 
     }
 
+    private void getGuessedSex(String content, List<String> list) {
+        if (content == null || content.length() == 0 || list == null) {
+            return;
+        }
+        Matcher matcher = SEX_PATTERN.matcher(content);
+        while (matcher.find()) {
+            list.add(matcher.group());
+        }
+
+    }
+
     @Override
     public int parseRealData(String data) {
         try {
@@ -268,27 +287,7 @@ public class GroupTopicSpider extends BaseDoubanSpider {
             parseTopicContent(data);
             parseCommentList(data);
 
-            List<Integer> priceList = new ArrayList<Integer>();
-            getGuessedPrice(tiezi.content, priceList);
-            getGuessedPrice(tiezi.replyContent, priceList);
-            tiezi.guessPrices = priceList.toString();
-            if (priceList.size() != 0) {
-                tiezi.guessPrice = priceList.get(0);
-            }
-
-            List<String> wechatList = new ArrayList<String>();
-            getGuessedWechat(tiezi.content, wechatList);
-            getGuessedWechat(tiezi.replyContent, wechatList);
-            if (wechatList.size() != 0) {
-                tiezi.guessWechat = wechatList.get(0);
-            }
-
-            List<String> phoneList = new ArrayList<String>();
-            getGuessedPhone(tiezi.content, phoneList);
-            getGuessedPhone(tiezi.replyContent, phoneList);
-            if (phoneList.size() != 0) {
-                tiezi.guessPhone = phoneList.get(0);
-            }
+            processParsedTopic(tiezi);
 
             LogManager.info(tiezi.toString());
             tiezi.created = System.currentTimeMillis();
@@ -304,6 +303,123 @@ public class GroupTopicSpider extends BaseDoubanSpider {
 
         }
         return BaseSpider.RET_SUCCESS;
+    }
+
+    private void processParsedTopic(GroupTiezi tiezi) {
+
+        List<Integer> priceList = new ArrayList<Integer>();
+        getGuessedPrice(tiezi.content, priceList);
+        getGuessedPrice(tiezi.replyContent, priceList);
+        tiezi.guessPrices = priceList.toString();
+        if (priceList.size() != 0) {
+            tiezi.guessPrice = priceList.get(0);
+        }
+
+        List<String> wechatList = new ArrayList<String>();
+        getGuessedWechat(tiezi.content, wechatList);
+        getGuessedWechat(tiezi.replyContent, wechatList);
+        if (wechatList.size() != 0) {
+            tiezi.guessWechat = wechatList.get(0);
+        }
+
+        List<String> phoneList = new ArrayList<String>();
+        getGuessedPhone(tiezi.content, phoneList);
+        getGuessedPhone(tiezi.replyContent, phoneList);
+        if (phoneList.size() != 0) {
+            tiezi.guessPhone = phoneList.get(0);
+        }
+
+        tiezi.shiNum = getNum(matchedString(SHI_NUM_PATTERN, tiezi.content));
+
+        tiezi.tingNum = getNum(matchedString(TING_NUM_PATTERN, tiezi.content));
+
+        tiezi.weiNum = getNum(matchedString(WEI_NUM_PATTERN, tiezi.content));
+
+        tiezi.chaoxiang = matchedString(CHAOXIANG_PATTERN, tiezi.content);
+
+        tiezi.louceng = getNum(matchedString(LOUCENG_PATTERN, tiezi.content));
+
+        List<String> sexList = new ArrayList<String>();
+        getGuessedSex(tiezi.content, sexList);
+        getGuessedSex(tiezi.replyContent, sexList);
+        if (sexList.size() != 0) {
+            String sex = sexList.get(0);
+            if (sex != null) {
+                if (sex == "男生") {
+                    tiezi.sex = 1;
+                } else if (sex == "女生") {
+                    tiezi.sex = 0;
+                } else {
+                    tiezi.sex = 2;
+                }
+            }
+        }
+        tiezi.guessSex = sexList.toString();
+    }
+
+    private static final String REG_SEX = "男生|女生|男女";
+    public static final Pattern SEX_PATTERN = Pattern.compile(REG_SEX);
+
+
+    private static final String REG_CHAOXIANG = "(?<=朝)[东南西北]{1,2}";
+    public static final Pattern CHAOXIANG_PATTERN = Pattern.compile(REG_CHAOXIANG);
+
+    private static final String REG_LOUCENG = "[0-9]*[零一二三四五六七八九]?(?=楼)";
+    public static final Pattern LOUCENG_PATTERN = Pattern.compile(REG_LOUCENG);
+
+
+    private static final String REG_SHI_NUM = "[0-9]*[零一二三四五六七八九]?(?=室)";
+    public static final Pattern SHI_NUM_PATTERN = Pattern.compile(REG_SHI_NUM);
+
+    private static final String REG_TING_NUM = "[0-9]*[零一二三四五六七八九]?(?=厅)";
+    public static final Pattern TING_NUM_PATTERN = Pattern.compile(REG_TING_NUM);
+
+    private static final String REG_WEI_NUM = "[0-9]*[零一二三四五六七八九]?(?=卫)";
+    public static final Pattern WEI_NUM_PATTERN = Pattern.compile(REG_WEI_NUM);
+
+    private static final String REG_NUM = "[0-9]+";
+    public static final Pattern NUM_PATTERN = Pattern.compile(REG_NUM);
+
+    private static final String REG_HAN_NUM = "[零一二三四五六七八九]";
+    public static final Pattern HAN_NUM_PATTERN = Pattern.compile(REG_HAN_NUM);
+
+    public Integer getNum(String content) {
+        if (content == null) {
+            return null;
+        }
+
+        String han = matchedString(HAN_NUM_PATTERN, content);
+        return han != null ? getNumFromHan(han)
+                : matchedInteger(NUM_PATTERN, content);
+    }
+
+    private Integer getNumFromHan(String content) {
+        if (content == null) {
+            return null;
+        }
+
+        if (content.equals("零")) {
+            return 0;
+        } else if (content.equals("一")) {
+            return 1;
+        } else if (content.equals("二")) {
+            return 2;
+        } else if (content.equals("三")) {
+            return 3;
+        } else if (content.equals("四")) {
+            return 4;
+        } else if (content.equals("五")) {
+            return 5;
+        } else if (content.equals("六")) {
+            return 6;
+        } else if (content.equals("七")) {
+            return 7;
+        } else if (content.equals("八")) {
+            return 8;
+        } else if (content.equals("九")) {
+            return 9;
+        }
+        return null;
     }
 
     @Override

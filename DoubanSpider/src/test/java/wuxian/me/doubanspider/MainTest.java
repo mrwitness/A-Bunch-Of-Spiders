@@ -20,6 +20,14 @@ import static org.junit.Assert.*;
 public class MainTest {
 
     @Test
+    public void testHan() {
+        String s = "零室9厅";
+
+        Integer i = new GroupTopicSpider(187L).getNum(ParsingUtil.matchedString(GroupTopicSpider.SHI_NUM_PATTERN, s));
+        LogManager.info(String.valueOf(i));
+    }
+
+    @Test
     public void testPrice() {
         String s = "1980dfasdaffa987";
 
