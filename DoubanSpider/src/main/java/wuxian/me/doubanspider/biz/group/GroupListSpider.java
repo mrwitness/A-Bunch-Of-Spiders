@@ -35,6 +35,8 @@ import static wuxian.me.spidercommon.util.StringUtil.removeAllBlanks;
  */
 public class GroupListSpider extends BaseDoubanSpider {
 
+    public static final Long STOP_TIME_INTERNAL = 1000 * 60 * 60 * 1 * 1 * 1L;
+
     private static final String API = "https://www.douban.com/group/";
     private static final String API_POST = "/discussion";
 
@@ -134,7 +136,7 @@ public class GroupListSpider extends BaseDoubanSpider {
                             time = "2017-" + time;
                             try {
                                 Date date = sdf.parse(time);
-                                if (new Date().getTime() - date.getTime() < 1000 * 60 * 60 * 1 * 1 * 1) {
+                                if (new Date().getTime() - date.getTime() < STOP_TIME_INTERNAL) {
                                     Helper.dispatchSpider(new GroupListSpider(groupId, page + 1));
                                 }
                             } catch (ParseException e) {

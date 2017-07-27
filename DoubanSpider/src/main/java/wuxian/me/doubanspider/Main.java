@@ -38,9 +38,9 @@ public class Main {
             ;
         }
 
-        //Helper.dispatchSpider(new GroupListSpider(145219L, 0));
+        Helper.dispatchSpider(new GroupListSpider(145219L, 0));
 
-        Helper.dispatchSpider(new GroupTopicSpider(92351212L));
+        //Helper.dispatchSpider(new GroupTopicSpider(92351212L));
 
         //LogManager.info(GroupTopicSpider.fromUrlNode(new GroupTopicSpider(187575L).toUrlNode()).toString());
     }

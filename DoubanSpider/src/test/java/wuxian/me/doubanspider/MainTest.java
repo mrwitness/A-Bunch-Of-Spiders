@@ -12,18 +12,28 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Matcher;
 
-import static org.junit.Assert.*;
-
 /**
  * Created by wuxian on 24/7/2017.
  */
 public class MainTest {
 
     @Test
+    public void testYa() {
+        String s = "压2付1";
+
+        String m = ParsingUtil.matchedString(GroupTopicSpider.YAFU_PATTERN, s);
+        Integer i = new GroupTopicSpider(129L).findNumberIfExist(ParsingUtil.matchedString(GroupTopicSpider.YA_PATTERN, m));
+        LogManager.info(String.valueOf(i));
+
+        i = new GroupTopicSpider(129L).findNumberIfExist(ParsingUtil.matchedString(GroupTopicSpider.FU_PATTERN, m));
+        LogManager.info(String.valueOf(i));
+    }
+
+    @Test
     public void testHan() {
         String s = "零室9厅";
 
-        Integer i = new GroupTopicSpider(187L).getNum(ParsingUtil.matchedString(GroupTopicSpider.SHI_NUM_PATTERN, s));
+        Integer i = new GroupTopicSpider(187L).findNumberIfExist(ParsingUtil.matchedString(GroupTopicSpider.SHI_NUM_PATTERN, s));
         LogManager.info(String.valueOf(i));
     }
 

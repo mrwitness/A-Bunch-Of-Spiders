@@ -61,8 +61,10 @@ public class GroupTiezi extends BaseModel {
     //sex不一定是准确的
     public String guessSex;
 
-    //是否有厨房
-    //public Boolean hasChufang;
+    //押几付几
+    public Integer ya;
+
+    public Integer fu;
 
     @Override
     public String name() {
@@ -90,6 +92,8 @@ public class GroupTiezi extends BaseModel {
                 ", louceng=" + louceng +
                 ", sex=" + sex +
                 ", guessSex='" + guessSex + '\'' +
+                ", ya=" + ya +
+                ", fu=" + fu +
                 '}';
     }
 
