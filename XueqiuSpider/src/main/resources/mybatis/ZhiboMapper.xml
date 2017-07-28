@@ -6,14 +6,17 @@
     <update id="createNewTableIfNeed" parameterType="wuxian.me.xueqiuspider.model.Zhibo">
         create table if not exists ${tableName} (zhibo_id BIGINT
         ,text VARCHAR(512),mark INT ,target VARCHAR(64)
-        ,create_at BIGINT,view_count INT
+        ,created_at BIGINT,view_count INT
         ,created BIGINT,updated BIGINT, PRIMARY KEY (zhibo_id))
         DEFAULT CHARSET = utf8,
         ENGINE = InnoDB;
     </update>
 
     <insert id="insertZhibo" parameterType="wuxian.me.xueqiuspider.model.Zhibo">
-
+        insert into ${tableName} (zhibo_id,text,mark,target,created_at,view_count
+        ,created,updated)
+        values (#{id},#{text},#{mark},#{target},#{created_at},#{view_count}
+        ,#{created},#{updated});
     </insert>
 
 </mapper>

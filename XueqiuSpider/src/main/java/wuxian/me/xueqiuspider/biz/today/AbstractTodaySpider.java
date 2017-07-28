@@ -29,6 +29,9 @@ public abstract class AbstractTodaySpider extends BaseXueqiuSpider {
     private Long maxId;
     private int count;
 
+    protected int getCategory() {
+        return category;
+    }
     protected Long getMaxId(){return maxId;}
 
     //https://xueqiu.com/v4/statuses/public_timeline_by_category.json?since_id=-1&max_id=20192619&count=15&category=-1
@@ -38,7 +41,7 @@ public abstract class AbstractTodaySpider extends BaseXueqiuSpider {
         this.count = count;
     }
 
-    private static final String API = "https://xueqiu.com/v4/statuses/public_timeline_by_category.json?since_id=-1";
+    public static final String API = "https://xueqiu.com/v4/statuses/public_timeline_by_category.json?since_id=-1";
 
     @Override
     protected Request buildRequest() {

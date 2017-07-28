@@ -1,4 +1,4 @@
-package wuxian.me.xueqiuspider.biz;
+package wuxian.me.xueqiuspider.save;
 
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
@@ -12,13 +12,13 @@ import java.util.Properties;
 /**
  * Created by wuxian on 30/5/2017.
  */
-public class BizConfig {
+public class ZhiboConfig {
 
     public static int saveCompanyInternal;
-    public static int saveSellInternal;
+    public static int saveZhiboInternal;
     public static int savePositionInternal;
 
-    private BizConfig() {
+    private ZhiboConfig() {
         ;
     }
 
@@ -52,7 +52,7 @@ public class BizConfig {
 
         saveCompanyInternal = parse(pro, "saveCompanyInternal", 180);
 
-        saveSellInternal = parse(pro, "saveZhiboInternal", 180);
+        saveZhiboInternal = parse(pro, "saveZhiboInternal", 180);
 
         savePositionInternal = parse(pro, "savePositionInternal", 180);
 
@@ -111,4 +111,3 @@ public class BizConfig {
     }
 
 }
-

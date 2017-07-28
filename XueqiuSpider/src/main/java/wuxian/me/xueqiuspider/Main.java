@@ -7,6 +7,7 @@ import wuxian.me.xueqiuspider.biz.BizConfig;
 import wuxian.me.xueqiuspider.biz.today.TodayTopSpider;
 import wuxian.me.xueqiuspider.biz.today.TodayZhiboSpider;
 import wuxian.me.xueqiuspider.model.Zhibo;
+import wuxian.me.xueqiuspider.save.ZhiboConfig;
 import wuxian.me.xueqiuspider.util.Helper;
 import wuxian.me.xueqiuspider.util.SpringBeans;
 
@@ -18,7 +19,7 @@ public class Main {
     private static void initEnv() {
         SpringBeans.init();
         BizConfig.init();
-        //GroupConfig.init();
+        ZhiboConfig.init();
 
         SpringBeans.zhiboMapper().createNewTableIfNeed(new Zhibo());
     }
@@ -37,6 +38,7 @@ public class Main {
             ;
         }
 
-        //Helper.dispatchSpider(new TodayZhiboSpider());
+        //LogManager.info(TodayZhiboSpider.fromUrlNode(new TodayZhiboSpider(87L).toUrlNode()).toString());
+        Helper.dispatchSpider(new TodayZhiboSpider());
     }
 }

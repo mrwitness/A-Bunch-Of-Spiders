@@ -6,4 +6,6 @@ import wuxian.me.xueqiuspider.model.Zhibo;
  * Created by wuxian on 28/7/2017.
  */
 public interface ZhiboMapper extends BaseMapper<Zhibo> {
+
+    void insertZhibo(Zhibo zhibo);
 }

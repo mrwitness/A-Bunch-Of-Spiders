@@ -3,7 +3,7 @@ package wuxian.me.xueqiuspider.model;
 /**
  * Created by wuxian on 25/7/2017.
  */
-public class Zhibo {
+public class Zhibo extends BaseModel {
 
     public static String tableName = "zhibo";
 
@@ -21,8 +21,12 @@ public class Zhibo {
 
     public Integer view_count;
 
+    public Long created;
+
+    public Long updated;
+
     @Override
-    public String toString() {
+    public String name() {
         return "Zhibo{" +
                 "id=" + id +
                 ", text='" + text + '\'' +
@@ -31,5 +35,10 @@ public class Zhibo {
                 ", created_at=" + created_at +
                 ", view_count=" + view_count +
                 '}';
+    }
+
+    @Override
+    public long index() {
+        return id;
     }
 }
