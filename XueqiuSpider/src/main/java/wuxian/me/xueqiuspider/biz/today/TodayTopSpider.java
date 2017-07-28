@@ -5,8 +5,8 @@ import com.google.gson.reflect.TypeToken;
 import wuxian.me.spidercommon.log.LogManager;
 import wuxian.me.spidermaster.framework.common.GsonProvider;
 import wuxian.me.spidersdk.BaseSpider;
-import wuxian.me.xueqiuspider.biz.today.model.TodayResponse;
-import wuxian.me.xueqiuspider.biz.today.model.TopItemData;
+import wuxian.me.xueqiuspider.model.today.TodayResponse;
+import wuxian.me.xueqiuspider.model.today.TopItemData;
 
 /**
  * Created by wuxian on 24/7/2017.

@@ -5,8 +5,8 @@ import wuxian.me.spidercommon.log.LogManager;
 import wuxian.me.spidercommon.model.HttpUrlNode;
 import wuxian.me.spidermaster.framework.common.GsonProvider;
 import wuxian.me.spidersdk.BaseSpider;
-import wuxian.me.xueqiuspider.biz.today.model.TodayItem;
-import wuxian.me.xueqiuspider.biz.today.model.TodayResponse;
+import wuxian.me.xueqiuspider.model.today.TodayItem;
+import wuxian.me.xueqiuspider.model.today.TodayResponse;
 import wuxian.me.xueqiuspider.model.Zhibo;
 import wuxian.me.xueqiuspider.save.ZhiboSaver;
 import wuxian.me.xueqiuspider.util.Helper;
@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class TodayZhiboSpider extends AbstractTodaySpider {
 
-    private static final Long STOP_TIME_INTERVAL = 1000 * 60 * 60 * 24 * 7L;  //只抓6小时以内的新闻
+    private static final Long STOP_TIME_INTERVAL = 1000 * 60 * 60 * 6 * 1L;  //只抓6小时以内的新闻
 
     public static HttpUrlNode toUrlNode(TodayZhiboSpider spider) {
         HttpUrlNode node = new HttpUrlNode();
@@ -58,8 +58,7 @@ public class TodayZhiboSpider extends AbstractTodaySpider {
         if (res == null) {
             return BaseSpider.RET_MAYBE_BLOCK;
         }
-        LogManager.info(res.toString());
-
+        //LogManager.info(res.toString());
 
         List<TodayItem> list = res.list;
         if (list == null || list.size() == 0) {

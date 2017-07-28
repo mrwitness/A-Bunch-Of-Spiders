@@ -1,4 +1,4 @@
-package wuxian.me.xueqiuspider.biz.today.model;
+package wuxian.me.xueqiuspider.model.today;
 
 import wuxian.me.xueqiuspider.model.User;
 
