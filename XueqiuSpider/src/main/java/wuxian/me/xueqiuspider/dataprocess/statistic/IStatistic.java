@@ -1,4 +1,4 @@
-package wuxian.me.xueqiuspider.dataprocess;
+package wuxian.me.xueqiuspider.dataprocess.statistic;
 
 import java.util.List;
 
@@ -8,5 +8,5 @@ import java.util.List;
 public interface IStatistic<T> {
 
     //统计某个item的出现次数,并排序？
-    void calTopItemCounts(List<T> dataList);
+    void sortAndCount(List<T> dataList);
 }

@@ -19,4 +19,18 @@
         ,#{created},#{updated});
     </insert>
 
+    <resultMap id="zhiboMap" type="wuxian.me.xueqiuspider.model.Zhibo">
+        <id property="id" column="zhibo_id"/>
+        <result property="text" column="text"/>
+        <result property="mark" column="mark"/>
+        <result property="target" column="target"/>
+        <result property="view_count" column="view_count"/>
+        <result property="created" column="created"/>
+        <result property="updated" column="updated"/>
+    </resultMap>
+
+    <select id="loadZhibo" resultMap="zhiboMap" parameterType="wuxian.me.xueqiuspider.model.Zhibo">
+        select * from ${tableName}
+    </select>
+
 </mapper>

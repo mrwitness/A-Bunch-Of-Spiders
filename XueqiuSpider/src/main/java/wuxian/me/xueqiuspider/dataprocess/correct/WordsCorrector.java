@@ -1,4 +1,4 @@
-package wuxian.me.xueqiuspider.dataprocess;
+package wuxian.me.xueqiuspider.dataprocess.correct;
 
 import java.util.List;
 
