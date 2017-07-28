@@ -5,7 +5,7 @@ import wuxian.me.spidercommon.log.LogManager;
 import wuxian.me.spidermaster.framework.common.GsonProvider;
 import wuxian.me.spidersdk.BaseSpider;
 import wuxian.me.xueqiuspider.biz.today.model.TodayResponse;
-import wuxian.me.xueqiuspider.biz.today.model.ZhiboItemData;
+import wuxian.me.xueqiuspider.model.Zhibo;
 
 /**
  * Created by wuxian on 25/7/2017.
@@ -23,7 +23,7 @@ public class TodayZhiboSpider extends AbstractTodaySpider {
 
         LogManager.info(data);
         TodayResponse res = GsonProvider.gson().fromJson(data
-                , new TypeToken<TodayResponse<ZhiboItemData>>() {
+                , new TypeToken<TodayResponse<Zhibo>>() {
                 }.getType());
 
         if (res == null) {

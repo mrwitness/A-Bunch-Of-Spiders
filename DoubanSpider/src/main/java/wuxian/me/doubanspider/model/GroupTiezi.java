@@ -2,7 +2,6 @@ package wuxian.me.doubanspider.model;
 
 /**
  * Created by wuxian on 26/7/2017.
- * Todo:押几付几
  */
 public class GroupTiezi extends BaseModel {
 

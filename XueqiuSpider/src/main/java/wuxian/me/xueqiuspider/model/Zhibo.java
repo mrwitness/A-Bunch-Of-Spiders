@@ -1,9 +1,11 @@
-package wuxian.me.xueqiuspider.biz.today.model;
+package wuxian.me.xueqiuspider.model;
 
 /**
  * Created by wuxian on 25/7/2017.
  */
-public class ZhiboItemData {
+public class Zhibo {
+
+    public static String tableName = "zhibo";
 
     //"{"id":183098,"text":"【传媒股临近午盘拉升】$华谊兄弟(SZ300027)$ 涨停，光线传媒涨近7%，华策影视、奥飞娱乐、中青宝等纷纷直线拉升。","mark":1,"target":"http://xueqiu.com/5124430882/89368918","created_at":1500953630000,"view_count":31327}"
 
@@ -21,7 +23,7 @@ public class ZhiboItemData {
 
     @Override
     public String toString() {
-        return "ZhiboItemData{" +
+        return "Zhibo{" +
                 "id=" + id +
                 ", text='" + text + '\'' +
                 ", mark=" + mark +
