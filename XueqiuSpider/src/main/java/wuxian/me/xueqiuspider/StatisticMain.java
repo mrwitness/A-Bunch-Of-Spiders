@@ -1,10 +1,10 @@
-package wuxian.me.xueqiuspider.dataprocess;
+package wuxian.me.xueqiuspider;
 
 import wuxian.me.spidercommon.log.LogManager;
-import wuxian.me.xueqiuspider.dataprocess.corrector.WordsCorrectorImpl;
-import wuxian.me.xueqiuspider.dataprocess.cut.ApdplatWordCutter;
-import wuxian.me.xueqiuspider.dataprocess.statistic.IStatistic;
-import wuxian.me.xueqiuspider.dataprocess.statistic.StatisticImpl;
+import wuxian.me.wordstatistic.corrector.WordsCorrectorImpl;
+import wuxian.me.wordstatistic.cut.ApdplatWordCutter;
+import wuxian.me.wordstatistic.statistic.IStatistic;
+import wuxian.me.wordstatistic.statistic.StatisticImpl;
 import wuxian.me.xueqiuspider.model.Zhibo;
 import wuxian.me.xueqiuspider.util.SpringBeans;
 
