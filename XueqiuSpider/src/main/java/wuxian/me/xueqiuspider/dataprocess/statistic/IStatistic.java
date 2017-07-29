@@ -1,5 +1,6 @@
 package wuxian.me.xueqiuspider.dataprocess.statistic;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -8,5 +9,14 @@ import java.util.List;
 public interface IStatistic<T> {
 
     //统计某个item的出现次数,并排序？
-    void sortAndCount(List<T> dataList);
+    Iterator<IModel<T>> sortAndCount(List<T> dataList);
+
+    interface IModel<T> {
+
+        T getKey();
+
+        Integer getSize();
+
+        Iterator<Integer> getPositions();
+    }
 }

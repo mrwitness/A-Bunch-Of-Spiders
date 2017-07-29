@@ -2,12 +2,13 @@ package wuxian.me.xueqiuspider.dataprocess.statistic;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 /**
  * Created by wuxian on 29/7/2017.
  */
-public class StatisModel {
+public class StatisModel implements IStatistic.IModel<String> {
 
     public String key;
 
@@ -23,6 +24,8 @@ public class StatisModel {
 
     @Override
     public boolean equals(Object o) {
+
+
         if (this == o) return true;
         if (!(o instanceof StatisModel)) return false;
 
@@ -40,13 +43,28 @@ public class StatisModel {
         return result;
     }
 
-    public static class Comparator implements java.util.Comparator<StatisModel> {
+    @Override
+    public String getKey() {
+        return key;
+    }
+
+    @Override
+    public Integer getSize() {
+        return positions.size();
+    }
+
+    @Override
+    public Iterator<Integer> getPositions() {
+        return positions.iterator();
+    }
+
+    public static class Comparator<T> implements java.util.Comparator<IStatistic.IModel<T>> {
 
         @Override
-        public int compare(StatisModel left, StatisModel right) {
+        public int compare(IStatistic.IModel<T> left, IStatistic.IModel<T> right) {
 
-            if (left.positions.size() != right.positions.size()) {
-                return left.positions.size() > right.positions.size() ? -1 : 1;
+            if (left.getSize() != right.getSize()) {
+                return left.getSize() > right.getSize() ? -1 : 1;
             }
 
             return 0;

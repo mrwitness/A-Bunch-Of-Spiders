@@ -1,7 +1,6 @@
 package wuxian.me.xueqiuspider.dataprocess.cut;
 
 import com.sun.istack.internal.NotNull;
-import com.sun.org.apache.bcel.internal.generic.LoadClass;
 import org.apdplat.word.WordSegmenter;
 import org.apdplat.word.segmentation.SegmentationAlgorithm;
 import org.apdplat.word.segmentation.Word;
@@ -42,7 +41,6 @@ public class ApdplatWordCutter implements IWordCutter {
         } else {
             list = WordSegmenter.seg(content, algorithm);
         }
-        LogManager.info("after cut:" + list.toString());
 
         List<String> wordList = new ArrayList<String>();
         for (Word w : list) {

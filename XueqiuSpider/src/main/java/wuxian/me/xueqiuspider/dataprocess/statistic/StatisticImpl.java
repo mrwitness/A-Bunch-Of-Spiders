@@ -2,10 +2,7 @@ package wuxian.me.xueqiuspider.dataprocess.statistic;
 
 import wuxian.me.spidercommon.log.LogManager;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by wuxian on 28/7/2017.
@@ -16,7 +13,7 @@ public class StatisticImpl implements IStatistic<String> {
 
 
     @Override
-    public void sortAndCount(List<String> dataList) {
+    public Iterator<IModel<String>> sortAndCount(List<String> dataList) {
 
         for (int i = 0; i < dataList.size(); i++) {
 
@@ -31,11 +28,12 @@ public class StatisticImpl implements IStatistic<String> {
             }
         }
 
-        List<StatisModel> list = new ArrayList<StatisModel>(modelMap.values());
+        List<IModel<String>> list = new ArrayList<IModel<String>>(modelMap.values());
         Collections.sort(list, new StatisModel.Comparator());
 
-        list = list.size() > 10 ? list.subList(0, 10) : list;
+        //list = list.size() > 10 ? list.subList(0, 10) : list;
+        //LogManager.info(list.toString());
 
-        LogManager.info(list.toString());
+        return list.iterator();
     }
 }
