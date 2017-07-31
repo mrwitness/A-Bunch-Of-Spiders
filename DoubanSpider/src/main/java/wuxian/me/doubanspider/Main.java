@@ -5,6 +5,7 @@ import wuxian.me.doubanspider.biz.group.GroupListSpider;
 import wuxian.me.doubanspider.biz.group.GroupTopicSpider;
 import wuxian.me.doubanspider.model.GroupTiezi;
 import wuxian.me.doubanspider.save.GroupConfig;
+import wuxian.me.doubanspider.save.GroupTieziSaver;
 import wuxian.me.doubanspider.util.Helper;
 import wuxian.me.doubanspider.util.SpringBeans;
 import wuxian.me.spidercommon.log.LogManager;
@@ -23,6 +24,8 @@ public class Main {
         GroupConfig.init();
 
         SpringBeans.groupTieziMapper().createNewTableIfNeed(new GroupTiezi());
+
+        SignalManager.registerOnSystemKill(GroupTieziSaver.getInstance());
     }
 
     public static void main(String[] args) {

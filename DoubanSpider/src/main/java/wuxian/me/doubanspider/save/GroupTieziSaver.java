@@ -31,7 +31,7 @@ public class GroupTieziSaver extends BaseSaver<GroupTiezi> {
     private GroupTieziSaver() {
         thread = new SaveModelThread(modelMap, GroupConfig.saveSellInternal * 1000, new SaveModelThread.IDatabaseOperator<GroupTiezi>() {
             public void insert(GroupTiezi model) {
-                //mapper.insertGroupTiezi(model);
+                mapper.insertTiezi(model);
             }
 
             public void update(GroupTiezi model) {
@@ -51,11 +51,6 @@ public class GroupTieziSaver extends BaseSaver<GroupTiezi> {
     }
 
     public boolean isModelValid(@NotNull GroupTiezi model) {
-        /*
-        if (model.quId == null) {
-            return false;
-        }
-        */
         return true;
     }
 

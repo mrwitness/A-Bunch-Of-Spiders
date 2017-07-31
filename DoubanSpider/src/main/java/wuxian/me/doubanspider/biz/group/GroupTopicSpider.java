@@ -10,6 +10,7 @@ import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
 import wuxian.me.doubanspider.biz.BaseDoubanSpider;
 import wuxian.me.doubanspider.model.GroupTiezi;
+import wuxian.me.doubanspider.save.GroupTieziSaver;
 import wuxian.me.doubanspider.util.Helper;
 import wuxian.me.doubanspider.util.SpringBeans;
 import wuxian.me.spidercommon.log.LogManager;
@@ -293,7 +294,9 @@ public class GroupTopicSpider extends BaseDoubanSpider {
             tiezi.created = System.currentTimeMillis();
             tiezi.updated = tiezi.created;
 
-            SpringBeans.groupTieziMapper().insertTiezi(tiezi);
+            //SpringBeans.groupTieziMapper().insertTiezi(tiezi);
+
+            saveTiezi(tiezi);
 
         } catch (MaybeBlockedException e) {
             return BaseSpider.RET_MAYBE_BLOCK;
@@ -303,6 +306,10 @@ public class GroupTopicSpider extends BaseDoubanSpider {
 
         }
         return BaseSpider.RET_SUCCESS;
+    }
+
+    private void saveTiezi(GroupTiezi tiezi) {
+        GroupTieziSaver.getInstance().saveModel(tiezi);
     }
 
     private void processParsedTopic(GroupTiezi tiezi) {

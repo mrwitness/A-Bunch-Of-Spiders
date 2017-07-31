@@ -35,7 +35,7 @@ import static wuxian.me.spidercommon.util.StringUtil.removeAllBlanks;
  */
 public class GroupListSpider extends BaseDoubanSpider {
 
-    public static final Long STOP_TIME_INTERNAL = 1000 * 60 * 60 * 1 * 1 * 1L;
+    public static final Long STOP_TIME_INTERNAL = 1000 * 60 * 60 * 24 * 7 * 2L;
 
     private static final String API = "https://www.douban.com/group/";
     private static final String API_POST = "/discussion";
@@ -92,16 +92,24 @@ public class GroupListSpider extends BaseDoubanSpider {
         nodelistEmptyIfTrueThrow(list);
 
         List<Long> topList = new ArrayList<Long>();
+
+        //list = childrenOfTypeAndContent(list,TableRow.class)
+
+        NodeList list1 = new NodeList();
         for (int i = 0; i < list.size(); i++) {
             Node child = list.elementAt(i);
-
             if (child instanceof TableRow && !child.getText().trim().contains("class=\"th\"")) {
-                Long id = parseItem(child, (i + 1 == list.size()));
-
-                if (id != null) {
-                    topList.add(id);
-                }
+                list1.add(child);
             }
+        }
+
+        for (int i = 0; i < list1.size(); i++) {
+            Node child = list1.elementAt(i);
+            Long id = parseItem(child, (i + 1 == list1.size()));
+            if (id != null) {
+                topList.add(id);
+            }
+
         }
 
         for (Long topidId : topList) {
