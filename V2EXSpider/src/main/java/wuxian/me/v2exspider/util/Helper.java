@@ -52,9 +52,9 @@ public class Helper {
         return builder.build();
     }
 
-    public static Headers getDoubanSpiderHeader(String host, @NotNull String reference) {
+    public static Headers getCareerSpiderHeader(String host, @NotNull String reference) {
         builder.set("Host", host);
-        return getHeaderBySpecifyRef(reference, "Douban");
+        return getHeaderBySpecifyRef(reference, "V2ex");
     }
 
 
