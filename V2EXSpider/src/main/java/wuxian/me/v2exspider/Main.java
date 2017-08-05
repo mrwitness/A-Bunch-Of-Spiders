@@ -1,12 +1,15 @@
 package wuxian.me.v2exspider;
 
 import wuxian.me.spidercommon.log.LogManager;
+import wuxian.me.spidercommon.util.ParsingUtil;
 import wuxian.me.spidercommon.util.SignalManager;
 import wuxian.me.spidersdk.JobManagerConfig;
 import wuxian.me.spidersdk.manager.JobManagerFactory;
 import wuxian.me.v2exspider.biz.BizConfig;
 import wuxian.me.v2exspider.biz.career.CareerSpider;
 import wuxian.me.v2exspider.model.BaseTiezi;
+import wuxian.me.v2exspider.save.CareerTieziSaver;
+import wuxian.me.v2exspider.save.GroupConfig;
 import wuxian.me.v2exspider.util.Helper;
 import wuxian.me.v2exspider.util.SpringBeans;
 
@@ -18,11 +21,11 @@ public class Main {
     private static void initEnv() {
         SpringBeans.init();
         BizConfig.init();
-        //GroupConfig.init();
+        GroupConfig.init();
 
         SpringBeans.careerTieziMapper().createNewTableIfNeed(new BaseTiezi());
 
-        //SignalManager.registerOnSystemKill(GroupTieziSaver.getInstance());
+        SignalManager.registerOnSystemKill(CareerTieziSaver.getInstance());
     }
 
     public static void main(String[] args) {
@@ -37,8 +40,9 @@ public class Main {
         } catch (InterruptedException e) {
             ;
         }
+        Helper.dispatchSpider(new CareerSpider(1));
 
-        //Helper.dispatchSpider(new CareerSpider(3));
+        //LogManager.info(CareerSpider.fromUrlNode(new CareerSpider(1).toUrlNode()).toString());
     }
 
 }

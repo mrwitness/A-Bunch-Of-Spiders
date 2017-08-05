@@ -9,13 +9,18 @@ import org.htmlparser.tags.*;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
 import wuxian.me.spidercommon.log.LogManager;
-import wuxian.me.spidercommon.util.NodeLogUtil;
+import wuxian.me.spidercommon.model.HttpUrlNode;
 import wuxian.me.spidercommon.util.StringUtil;
 import wuxian.me.spidersdk.BaseSpider;
 import wuxian.me.spidersdk.anti.MaybeBlockedException;
 import wuxian.me.v2exspider.biz.BaseV2EXSpider;
+import wuxian.me.v2exspider.model.BaseTiezi;
+import wuxian.me.v2exspider.save.CareerTieziSaver;
 import wuxian.me.v2exspider.util.Helper;
+import wuxian.me.v2exspider.util.SpringBeans;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.regex.Pattern;
 
 import static wuxian.me.spidercommon.util.ParsingUtil.*;
@@ -28,6 +33,22 @@ public class CareerSpider extends BaseV2EXSpider {
 
     private static final String API = "https://www.v2ex.com/go/career";
     private int page;
+
+    public static HttpUrlNode toUrlNode(CareerSpider spider) {
+        HttpUrlNode node = new HttpUrlNode();
+
+        node.baseUrl = API;
+        node.httpGetParam.put("p", String.valueOf(spider.page));
+        return node;
+    }
+
+    public static CareerSpider fromUrlNode(HttpUrlNode node) {
+
+        if (!node.baseUrl.contains(API)) {
+            return null;
+        }
+        return new CareerSpider(Integer.parseInt(node.httpGetParam.get("p")));
+    }
 
     public CareerSpider(int page) {
         this.page = page;
@@ -57,8 +78,12 @@ public class CareerSpider extends BaseV2EXSpider {
 
     private void parseItem(Node node) throws MaybeBlockedException, ParserException {
 
-        LogManager.info("tiezi id:" + matchedInteger(TID_PATTERN, node.getText()));
-        LogManager.info("author id:" + matchedInteger(AID_PATTERN, node.getText()));
+        BaseTiezi tiezi = new BaseTiezi();
+        //LogManager.info("tiezi id:" + matchedInteger(TID_PATTERN, node.getText()));
+        //LogManager.info("author id:" + matchedInteger(AID_PATTERN, node.getText()));
+
+        tiezi.id = matchedLong(TID_PATTERN, node.getText());
+        tiezi.authorId = matchedString(AID_PATTERN, node.getText());
 
         node = firstChildOfType(node.getChildren(), TableTag.class);
         if (node == null) {
@@ -68,7 +93,6 @@ public class CareerSpider extends BaseV2EXSpider {
         if (node == null) {
             throw new MaybeBlockedException();
         }
-        //NodeLogUtil.printChildrenOfNode(node);
 
         NodeList list = node.getChildren();
         for (int i = 0; i < list.size(); i++) {
@@ -76,45 +100,89 @@ public class CareerSpider extends BaseV2EXSpider {
             Node child = list.elementAt(i);
 
             if (child instanceof TableColumn && child.getText().contains("right")) {
-                LogManager.info("-------------response num node-------------");
-                //NodeLogUtil.printChildrenOfNode(child);
 
                 Node c = firstChildOfType(child.getChildren(), LinkTag.class);
                 if (c == null) {
-                    LogManager.info("response num:" + 0);
+                    //LogManager.info("response num:" + 0);
+
+                    tiezi.replyNum = 0;
                 } else {
-                    LogManager.info("response num:" + c.toPlainTextString().trim());
+                    //LogManager.info("response num:" + c.toPlainTextString().trim());
+                    tiezi.replyNum = Integer.parseInt(c.toPlainTextString().trim());
                 }
 
             } else if (child instanceof TableColumn && child.getText().contains("middle")) {
-
-                LogManager.info("----------------content node-------------");
-                //NodeLogUtil.printChildrenOfNode(child);
-                parseItemMain(child);
+                parseItemMain(child, tiezi);
             }
         }
+
+        //LogManager.info("paresed tiezi: "+tiezi.toString());
+        saveTiezi(tiezi);
     }
 
     //作者id
     public static final String REG_ANAME = "[0-9a-zA-Z]+";
     public static final Pattern ANAME_PATTERN = Pattern.compile(REG_ANAME);
 
-
-    private void parseItemMain(Node node) throws MaybeBlockedException, ParserException {
-
+    private void parseItemMain(Node node, BaseTiezi tiezi) throws MaybeBlockedException, ParserException {
         NodeList list = node.getChildren();
         for (int i = 0; i < list.size(); i++) {
             Node child = list.elementAt(i);
 
             if (child instanceof Span && child.getText().contains("item_title")) {
-                LogManager.info("title:" + child.toPlainTextString().trim());
+                //LogManager.info("title:" + child.toPlainTextString().trim());
+                tiezi.title = child.toPlainTextString().trim();
             } else if (child instanceof Span && child.getText().contains("small")) {
-                LogManager.info("author name:" + matchedString(ANAME_PATTERN, child.toPlainTextString()));
+                //LogManager.info(StringUtil.removeAllBlanks(child.toPlainTextString()));
+                //LogManager.info("author name:" + matchedString(ANAME_PATTERN, child.toPlainTextString()));
 
-                LogManager.info("post time:" + matchedString(POSTTIME_PATTERN, StringUtil.removeAllBlanks(child.toPlainTextString())));
+                tiezi.author = matchedString(ANAME_PATTERN, child.toPlainTextString());
+                //LogManager.info("post time:" + matchedString(POSTTIME_PATTERN, StringUtil.removeAllBlanks(child.toPlainTextString())));
+                String resposeTime = matchedString(POSTTIME_PATTERN, StringUtil.removeAllBlanks(child.toPlainTextString()));
+
+                long t = System.currentTimeMillis();
+                int index = -1;
+                if (resposeTime.contains("秒")) {
+                    //LogManager.info("reponse time:" + sdf.format(new Date(t)));
+                    tiezi.latestReplyTime = t;
+                } else if ((index = resposeTime.indexOf("天")) != -1) {
+                    int day = Integer.parseInt(resposeTime.substring(0, index));
+                    //LogManager.info("reponse time:" + sdf.format(new Date(t - day * 3600 * 1000 * 24)));
+                    tiezi.latestReplyTime = t - day * 3600 * 1000 * 24;
+                } else {
+                    int m = 0;
+                    int hour = resposeTime.indexOf("小时");
+
+                    int minute = -1;
+                    if (hour != -1) {
+                        m += Integer.parseInt(resposeTime.substring(0, hour)) * 60;
+                    }
+                    minute = resposeTime.indexOf("分钟");
+                    if (minute != -1) {
+                        m += Integer.parseInt(resposeTime.substring(hour + 2, minute));
+                    }
+                    if (m != 0) {
+                        //LogManager.info("reponse time:" + sdf.format(new Date(t - m * 60 * 1000)));
+                        tiezi.latestReplyTime = t - m * 60 * 1000;
+                    } else {
+                        //LogManager.info("response time:" + resposeTime);
+                        try {
+                            tiezi.latestReplyTime = sdf2.parse(resposeTime).getTime();
+                        } catch (ParseException e) {
+                            ;
+                        }
+                    }
+                }
             }
         }
     }
+
+    private void saveTiezi(BaseTiezi tiezi) {
+        CareerTieziSaver.getInstance().saveModel(tiezi);
+    }
+
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss");
 
     private void parseItemList(String data) throws MaybeBlockedException, ParserException {
 
@@ -139,8 +207,7 @@ public class CareerSpider extends BaseV2EXSpider {
     public static final String REG_NUM = "(?<=max=\")\\d+";
     public static final Pattern NUM_PATTERN = Pattern.compile(REG_NUM);
 
-    //Todo:这里需要换算一下
-    public static final String REG_POSTTIME = "[0-9分钟小时月天年几秒]+(?=前)";
+    public static final String REG_POSTTIME = "[0-9分钟小时月天年几秒:-]+(?=前)|[0-9:-]{18}";
     public static final Pattern POSTTIME_PATTERN = Pattern.compile(REG_POSTTIME);
 
 
@@ -149,7 +216,16 @@ public class CareerSpider extends BaseV2EXSpider {
         parser.setEncoding("utf-8");
         HasAttributeFilter filter = new HasAttributeFilter("class", "page_input");
         Node node = firstChildIfNullThrow(parser.extractAllNodesThatMatch(filter));
-        LogManager.info("total page:" + matchedInteger(NUM_PATTERN, node.getText()));
+        //LogManager.info("total page:" + matchedInteger(NUM_PATTERN, node.getText()));
+
+        Integer num = matchedInteger(NUM_PATTERN, node.getText());
+        if (num == null) {
+            throw new MaybeBlockedException();
+        }
+
+        for (int i = 2; i < num; i++) {
+            Helper.dispatchSpider(new CareerSpider(num));
+        }
     }
 
     @Override

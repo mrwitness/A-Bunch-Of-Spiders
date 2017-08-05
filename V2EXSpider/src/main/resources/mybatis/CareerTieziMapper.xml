@@ -4,7 +4,7 @@
 <mapper namespace="wuxian.me.v2exspider.mapper.CareerTieziMapper">
 
     <update id="createNewTableIfNeed" parameterType="wuxian.me.v2exspider.model.BaseTiezi">
-        create table if not exists ${tableName} (tiezi_id BIGINT
+        create table if not exists ${tableName} (tiezi_id BIGINT comment 'https://www.v2ex.com/t/'
         ,title VARCHAR(56)
         ,author VARCHAR(24), author_id VARCHAR(24)
         ,latest_response_time BIGINT
@@ -15,8 +15,8 @@
     </update>
 
     <insert id="insertTiezi" parameterType="wuxian.me.v2exspider.model.BaseTiezi">
-        insert into ${tableName} (tiezi_id,title, author, author_id,latest_response_time,reply_num)
-        values (#{id},#{title}, #{author}, #{authorId},#{latestReplyTime},#{replyNum});
+        insert into ${tableName} (tiezi_id,title, author, author_id,latest_response_time,reply_num,created,updated)
+        values (#{id},#{title}, #{author}, #{authorId},#{latestReplyTime},#{replyNum},now(),now());
     </insert>
 
 </mapper>
