@@ -8,6 +8,8 @@ public class GroupTiezi extends BaseModel {
 
     public static String tableName = "tiezi";
 
+    public String groupId;
+
     public Long id;
 
     public String title;

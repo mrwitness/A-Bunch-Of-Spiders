@@ -34,12 +34,12 @@ import static wuxian.me.spidercommon.util.StringUtil.removeAllBlanks;
  */
 public class GroupListSpider extends BaseDoubanSpider {
 
-    public static final Long STOP_TIME_INTERNAL = 1000 * 60 * 60 * 6 * 1 * 1L;
+    public static final Long STOP_TIME_INTERNAL = 1000 * 60 * 60 * 3 * 1 * 1L;
 
     private static final String API = "https://www.douban.com/group/";
     private static final String API_POST = "/discussion";
 
-    private Long groupId;
+    private String groupId;
     private int page;
 
     public static HttpUrlNode toUrlNode(GroupListSpider spider) {
@@ -55,15 +55,15 @@ public class GroupListSpider extends BaseDoubanSpider {
         if (!node.baseUrl.contains(API) || !node.baseUrl.contains(API_POST)) {
             return null;
         }
-        Long id = matchedLong(NODE_GROUPID_PATTERN, node.baseUrl);
+        String id = matchedString(NODE_GROUPID_PATTERN, node.baseUrl);
         return new GroupListSpider(id, Integer.parseInt(node.httpGetParam.get("start")));
     }
 
-    private static final String REG_NODE_GROUPID = "(?<=group/)\\d+";
+    private static final String REG_NODE_GROUPID = "(?<=group/)[0-9a-zA-Z]+";
     private static final Pattern NODE_GROUPID_PATTERN = Pattern.compile(REG_NODE_GROUPID);
 
 
-    public GroupListSpider(Long groupId, int page) {
+    public GroupListSpider(String groupId, int page) {
         this.groupId = groupId;
         this.page = page;
     }
@@ -108,7 +108,7 @@ public class GroupListSpider extends BaseDoubanSpider {
         }
 
         for (Long topidId : topList) {
-            Helper.dispatchSpider(new GroupTopicSpider(topidId));
+            Helper.dispatchSpider(new GroupTopicSpider(groupId, topidId));
         }
     }
 
@@ -117,7 +117,11 @@ public class GroupListSpider extends BaseDoubanSpider {
 
         Long topId = null;
         NodeList list = node.getChildren();
-        nodelistEmptyIfTrueThrow(list);
+
+        if(list == null || list.size() == 0) {
+            return null;  //允许为空
+        }
+
 
         for (int i = 0; i < list.size(); i++) {
             Node child = list.elementAt(i);
@@ -137,7 +141,6 @@ public class GroupListSpider extends BaseDoubanSpider {
                             time = "2017-" + time;
                             try {
                                 Date date = sdf.parse(time);
-                                //Fixme: seems always true?
                                 if (new Date().getTime() - date.getTime() < STOP_TIME_INTERNAL) {
                                     Helper.dispatchSpider(new GroupListSpider(groupId, page + 1));
                                 }

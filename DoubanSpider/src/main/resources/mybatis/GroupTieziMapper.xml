@@ -18,6 +18,7 @@
         ,fu TINYINT
         ,ya TINYINT
         ,post_time BIGINT
+        ,group_id VARCHAR(64) comment '小组id'
         ,created BIGINT,updated BIGINT, PRIMARY KEY (tiezi_id))
         DEFAULT CHARSET = utf8,
         ENGINE = InnoDB;
@@ -27,12 +28,12 @@
         insert into ${tableName} (tiezi_id,rent_status,rent_type,title, author, author_id,post_time
         ,picture_num,selfreply_num,otherreply_num,guess_prices,guess_price
         ,guess_wechat,guess_phone ,content,reply_content,created,updated,shi_num
-        ,ting_num,wei_num,chaoxiang,louceng,sex,guess_sex,ya,fu)
+        ,ting_num,wei_num,chaoxiang,louceng,sex,guess_sex,ya,fu,group_id)
         values (#{id},#{rentStatus},#{rentType},#{title}, #{author}, #{authorId},#{postTime}
         ,#{pictureNum},#{selfReplyNum},#{otherReplyNum},#{guessPrices},#{guessPrice}
         ,#{guessWechat},#{guessPhone} ,#{content},#{replyContent},#{created},#{updated}
         ,#{shiNum}
-        ,#{tingNum},#{weiNum},#{chaoxiang},#{louceng},#{sex},#{guessSex},#{ya},#{fu});
+        ,#{tingNum},#{weiNum},#{chaoxiang},#{louceng},#{sex},#{guessSex},#{ya},#{fu},#{groupId});
     </insert>
 
 </mapper>

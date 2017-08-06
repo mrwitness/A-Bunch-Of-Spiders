@@ -9,7 +9,9 @@ import wuxian.me.spidercommon.util.StringUtil;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 
 /**
@@ -22,10 +24,10 @@ public class MainTest {
         String s = "压2付1";
 
         String m = ParsingUtil.matchedString(GroupTopicSpider.YAFU_PATTERN, s);
-        Integer i = new GroupTopicSpider(129L).findNumberIfExist(ParsingUtil.matchedString(GroupTopicSpider.YA_PATTERN, m));
+        Integer i = new GroupTopicSpider("",129L).findNumberIfExist(ParsingUtil.matchedString(GroupTopicSpider.YA_PATTERN, m));
         LogManager.info(String.valueOf(i));
 
-        i = new GroupTopicSpider(129L).findNumberIfExist(ParsingUtil.matchedString(GroupTopicSpider.FU_PATTERN, m));
+        i = new GroupTopicSpider("",129L).findNumberIfExist(ParsingUtil.matchedString(GroupTopicSpider.FU_PATTERN, m));
         LogManager.info(String.valueOf(i));
     }
 
@@ -33,18 +35,18 @@ public class MainTest {
     public void testHan() {
         String s = "零室9厅";
 
-        Integer i = new GroupTopicSpider(187L).findNumberIfExist(ParsingUtil.matchedString(GroupTopicSpider.SHI_NUM_PATTERN, s));
+        Integer i = new GroupTopicSpider("",187L).findNumberIfExist(ParsingUtil.matchedString(GroupTopicSpider.SHI_NUM_PATTERN, s));
         LogManager.info(String.valueOf(i));
     }
 
     @Test
     public void testPrice() {
-        String s = "1980dfasdaffa987";
+        String s = "???嘿客公寓???西城年华对面，距离城西银泰，浙大，汽车北站都是1公里的距离，面积35方，价格1700-2000???，可以付一押一???，随时可以看房???，电话18768137079??????";
 
-        Matcher matcher = GroupTopicSpider.MAYBE_PRICE_PATTERN.matcher(s);
-        while (matcher.find()) {
-            LogManager.info(matcher.group());
-        }
+
+        List<Integer> list = new ArrayList<Integer>();
+        new GroupTopicSpider("",98L).getGuessedPrice(s,list);
+        LogManager.info(list.toString());
     }
 
     @Test

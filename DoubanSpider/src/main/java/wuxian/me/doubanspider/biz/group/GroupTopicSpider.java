@@ -43,6 +43,7 @@ public class GroupTopicSpider extends BaseDoubanSpider {
     public static HttpUrlNode toUrlNode(GroupTopicSpider spider) {
         HttpUrlNode node = new HttpUrlNode();
         node.baseUrl = API + spider.topicId;
+        node.httpGetParam.put("groupId",spider.groupId);
         return node;
     }
 
@@ -50,13 +51,15 @@ public class GroupTopicSpider extends BaseDoubanSpider {
         if (!node.baseUrl.contains(API)) {
             return null;
         }
-        return new GroupTopicSpider(matchedLong(NODE_GROUPID_PATTERN, node.baseUrl));
+        return new GroupTopicSpider(node.httpGetParam.get("groupId"),matchedLong(NODE_GROUPID_PATTERN, node.baseUrl));
     }
 
     private static final String REG_NODE_GROUPID = "(?<=topic/)\\d+";
     private static final Pattern NODE_GROUPID_PATTERN = Pattern.compile(REG_NODE_GROUPID);
 
-    public GroupTopicSpider(Long topId) {
+    private String groupId;
+    public GroupTopicSpider(String groupId,Long topId) {
+        this.groupId = groupId;
         this.topicId = topId;
     }
 
@@ -215,7 +218,7 @@ public class GroupTopicSpider extends BaseDoubanSpider {
         }
     }
 
-    private void getGuessedPrice(String content, List<Integer> list) {
+    public void getGuessedPrice(String content, List<Integer> list) {
         if (content == null || content.length() == 0 || list == null) {
             return;
         }
@@ -340,6 +343,7 @@ public class GroupTopicSpider extends BaseDoubanSpider {
                 continue;
             }
             tiezi.guessPrice = p;
+            break;
         }
 
         tiezi.shiNum = findNumberIfExist(matchedString(SHI_NUM_PATTERN, tiezi.content));
