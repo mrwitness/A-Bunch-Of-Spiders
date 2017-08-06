@@ -137,6 +137,7 @@ public class GroupListSpider extends BaseDoubanSpider {
                             time = "2017-" + time;
                             try {
                                 Date date = sdf.parse(time);
+                                //Fixme: seems always true?
                                 if (new Date().getTime() - date.getTime() < STOP_TIME_INTERNAL) {
                                     Helper.dispatchSpider(new GroupListSpider(groupId, page + 1));
                                 }

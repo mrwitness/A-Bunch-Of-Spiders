@@ -227,7 +227,7 @@ public class GroupTopicSpider extends BaseDoubanSpider {
                 int end = matcher.end();
                 if (end < content.length()) {
                     char c = content.charAt(end);
-                    if (c >= '0' && c <= '9' || c == '米' || c == '号' || c == '方') {  //要么是手机号码的中间值 要么距离xxx xxx米
+                    if (c >= '0' && c <= '9' || c == '米' || c == '号' || c == '方' || c == '路') {  //要么是手机号码的中间值 要么距离xxx xxx米
                         continue;
                     }
                 }
@@ -334,9 +334,9 @@ public class GroupTopicSpider extends BaseDoubanSpider {
         getGuessedPrice(tiezi.replyContent, priceList);
         tiezi.guessPrices = priceList.toString();
         for (Integer p : priceList) {
-            if(tiezi.guessWechat != null && tiezi.guessWechat.contains(String.valueOf(p))) {
+            if (tiezi.guessWechat != null && tiezi.guessWechat.contains(String.valueOf(p))) {
                 continue;
-            } else if(tiezi.guessPhone != null && tiezi.guessPhone.contains(String.valueOf(p))) {
+            } else if (tiezi.guessPhone != null && tiezi.guessPhone.contains(String.valueOf(p))) {
                 continue;
             }
             tiezi.guessPrice = p;
@@ -379,26 +379,26 @@ public class GroupTopicSpider extends BaseDoubanSpider {
             tiezi.rentStatus = 1;
         }
 
-        String liveTime = matchedString(LIVE_TIME_PATTERN,tiezi.title+tiezi.content+tiezi.replyContent);
+        String liveTime = matchedString(LIVE_TIME_PATTERN, tiezi.title + tiezi.content + tiezi.replyContent);
 
-        if(liveTime != null) {
-            if(liveTime.equals("月末") || liveTime.equals("月底")) {
+        if (liveTime != null) {
+            if (liveTime.equals("月末") || liveTime.equals("月底")) {
                 tiezi.guessTime = 31;
-            } else if(liveTime.equals("月初")) {
+            } else if (liveTime.equals("月初")) {
                 tiezi.guessTime = 1;
-            } else if(liveTime.equals("月中")) {
+            } else if (liveTime.equals("月中")) {
                 tiezi.guessTime = 15;
             } else {
                 tiezi.guessTime = Integer.parseInt(liveTime);
             }
         }
 
-        String rentType = matchedString(RENT_TYPE_PATTERN,tiezi.title+tiezi.content+tiezi.replyContent);
-        if(rentType != null) {
+        String rentType = matchedString(RENT_TYPE_PATTERN, tiezi.title + tiezi.content + tiezi.replyContent);
+        if (rentType != null) {
 
-            if(rentType.contains("出")) {
+            if (rentType.contains("出")) {
                 tiezi.rentType = 0;
-            } else if(rentType.contains("转")) {
+            } else if (rentType.contains("转")) {
                 tiezi.rentType = 1;
             } else {
                 tiezi.rentType = 2;
@@ -449,7 +449,7 @@ public class GroupTopicSpider extends BaseDoubanSpider {
     public static final Pattern LIVE_TIME_PATTERN = Pattern.compile(REG_LIVE_TIME);
 
     private static final String REG_RENT_TYPE = "出租|转租|求?[和合]租";
-    public static final Pattern RENT_TYPE_PATTERN  = Pattern.compile(REG_RENT_TYPE);
+    public static final Pattern RENT_TYPE_PATTERN = Pattern.compile(REG_RENT_TYPE);
 
     public Integer findNumberIfExist(String content) {
         if (content == null) {

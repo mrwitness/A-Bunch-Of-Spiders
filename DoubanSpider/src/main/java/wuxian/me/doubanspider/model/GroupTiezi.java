@@ -2,7 +2,7 @@ package wuxian.me.doubanspider.model;
 
 /**
  * Created by wuxian on 26/7/2017.
- * Todo:阳台?
+ * Todo:阳台?短租?
  */
 public class GroupTiezi extends BaseModel {
 

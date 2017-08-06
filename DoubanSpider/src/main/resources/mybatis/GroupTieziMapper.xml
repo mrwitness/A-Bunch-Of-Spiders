@@ -4,7 +4,7 @@
 <mapper namespace="wuxian.me.doubanspider.mapper.GroupTieziMapper">
 
     <update id="createNewTableIfNeed" parameterType="wuxian.me.doubanspider.model.GroupTiezi">
-        create table if not exists ${tableName} (tiezi_id BIGINT
+        create table if not exists ${tableName} (tiezi_id BIGINT comment 'https://www.douban.com/group/topic/'
         ,rent_status SMALLINT comment '0:正常 1:已出',rent_type SMALLINT comment '0:出租 1:转租 2:求租'
         ,picture_num SMALLINT comment '帖子里的图片数量',title VARCHAR(56),sex INT comment '-1 未知 0 只限女 1 只限男 2 不限',guess_sex VARCHAR(16)
         ,guess_price INT,guess_prices VARCHAR(48)
