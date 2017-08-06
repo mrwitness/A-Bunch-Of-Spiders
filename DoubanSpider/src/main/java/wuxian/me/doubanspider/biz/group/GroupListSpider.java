@@ -1,6 +1,5 @@
 package wuxian.me.doubanspider.biz.group;
 
-import com.sun.org.apache.regexp.internal.RE;
 import okhttp3.HttpUrl;
 import okhttp3.Request;
 import org.htmlparser.Node;
@@ -35,7 +34,7 @@ import static wuxian.me.spidercommon.util.StringUtil.removeAllBlanks;
  */
 public class GroupListSpider extends BaseDoubanSpider {
 
-    public static final Long STOP_TIME_INTERNAL = 1000 * 60 * 60 * 24 * 7 * 2L;
+    public static final Long STOP_TIME_INTERNAL = 1000 * 60 * 60 * 6 * 1 * 1L;
 
     private static final String API = "https://www.douban.com/group/";
     private static final String API_POST = "/discussion";
@@ -90,10 +89,7 @@ public class GroupListSpider extends BaseDoubanSpider {
         Node node = firstChildIfNullThrow(parser.extractAllNodesThatMatch(filter));
         NodeList list = node.getChildren();
         nodelistEmptyIfTrueThrow(list);
-
         List<Long> topList = new ArrayList<Long>();
-
-        //list = childrenOfTypeAndContent(list,TableRow.class)
 
         NodeList list1 = new NodeList();
         for (int i = 0; i < list.size(); i++) {
@@ -109,7 +105,6 @@ public class GroupListSpider extends BaseDoubanSpider {
             if (id != null) {
                 topList.add(id);
             }
-
         }
 
         for (Long topidId : topList) {
@@ -135,9 +130,7 @@ public class GroupListSpider extends BaseDoubanSpider {
                 topId = matchedLong(TOPIC_ID_PATTERN, removeAllBlanks(child.getText()));
 
             } else if (child instanceof TableColumn && child.getText().trim().contains("nowrap")) {
-
                 if (child.getText().trim().contains("class=\"time\"")) {
-
                     if (lastItem) {        //最后一条item用于判断是否应该dispatch下一页的spider。
                         String time = child.toPlainTextString().trim();
                         if (GroupListSpider.TIME_PATTERN.matcher(time).matches()) {

@@ -224,7 +224,7 @@ public class CareerSpider extends BaseV2EXSpider {
         }
 
         for (int i = 2; i < num; i++) {
-            Helper.dispatchSpider(new CareerSpider(num));
+            Helper.dispatchSpider(new CareerSpider(i));
         }
     }
 

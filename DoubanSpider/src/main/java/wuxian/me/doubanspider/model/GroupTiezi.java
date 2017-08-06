@@ -2,6 +2,7 @@ package wuxian.me.doubanspider.model;
 
 /**
  * Created by wuxian on 26/7/2017.
+ * Todo:阳台?
  */
 public class GroupTiezi extends BaseModel {
 
@@ -19,51 +20,60 @@ public class GroupTiezi extends BaseModel {
 
     public Long postTime;
 
-    public Integer pictureNum;
+    public Integer pictureNum  = 0;
 
-    public Integer selfReplyNum;
+    public Integer selfReplyNum = 0;
 
-    public Integer otherReplyNum;
+    public Integer otherReplyNum = 0;
 
     public String replyContent;
 
-    public Integer guessPrice;
+    public Integer guessPrice = 0;
 
     //比如1500-1600
-    public String guessPrices;
+    public String guessPrices ;
 
-    public String guessWechat;
+    public String guessWechat ;
 
-    public String guessPhone;
+    public String guessPhone ;
 
     public Long created;
 
     public Long updated;
 
     //几室
-    public Integer shiNum;
+    public Integer shiNum = -1;
 
     //几厅
-    public Integer tingNum;
+    public Integer tingNum = -1;
 
-    public Integer weiNum;
+    public Integer weiNum = -1;
 
     //朝向
     public String chaoxiang;
 
     //几楼
-    public Integer louceng;
+    public Integer louceng = -1;
 
     //0:只限女生 1:只限男生 2:男女不限
-    public Integer sex;
+    public Integer sex = -1;
 
     //sex不一定是准确的
     public String guessSex;
 
     //押几付几
-    public Integer ya;
+    public Integer ya = -1;
 
-    public Integer fu;
+    public Integer fu = -1;
+
+    //0:出租 1:转租 2:求租 求合租
+    public Integer rentType = -1;
+
+    //0:正在出租 1:已租 已出
+    public Integer rentStatus = 0;
+
+    //入住时间
+    public Integer guessTime = -1;
 
     @Override
     public String name() {

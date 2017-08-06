@@ -19,6 +19,7 @@ import wuxian.me.spidersdk.manager.JobManagerFactory;
 public class Main {
 
     private static void initEnv() {
+
         SpringBeans.init();
         BizConfig.init();
         GroupConfig.init();

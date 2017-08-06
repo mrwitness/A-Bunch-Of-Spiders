@@ -5,10 +5,11 @@
 
     <update id="createNewTableIfNeed" parameterType="wuxian.me.doubanspider.model.GroupTiezi">
         create table if not exists ${tableName} (tiezi_id BIGINT
-        ,picture_num SMALLINT,title VARCHAR(56),sex INT,guess_sex VARCHAR(16)
+        ,rent_status SMALLINT comment '0:正常 1:已出',rent_type SMALLINT comment '0:出租 1:转租 2:求租'
+        ,picture_num SMALLINT comment '帖子里的图片数量',title VARCHAR(56),sex INT comment '-1 未知 0 只限女 1 只限男 2 不限',guess_sex VARCHAR(16)
         ,guess_price INT,guess_prices VARCHAR(48)
-        ,shi_num SMALLINT ,ting_num SMALLINT ,wei_num SMALLINT ,chaoxiang VARCHAR(4)
-        ,louceng SMALLINT
+        ,shi_num SMALLINT comment '几室' ,ting_num SMALLINT comment '几厅' ,wei_num SMALLINT comment '几卫' ,chaoxiang VARCHAR(4)
+        ,louceng SMALLINT,guess_live_time INT comment '猜的入住时间'
         ,content VARCHAR(1024),reply_content VARCHAR(1024)
         ,selfreply_num SMALLINT ,otherreply_num SMALLINT
         ,author VARCHAR(24), author_id VARCHAR(24)
@@ -23,11 +24,11 @@
     </update>
 
     <insert id="insertTiezi" parameterType="wuxian.me.doubanspider.model.GroupTiezi">
-        insert into ${tableName} (tiezi_id,title, author, author_id,post_time
+        insert into ${tableName} (tiezi_id,rent_status,rent_type,title, author, author_id,post_time
         ,picture_num,selfreply_num,otherreply_num,guess_prices,guess_price
         ,guess_wechat,guess_phone ,content,reply_content,created,updated,shi_num
         ,ting_num,wei_num,chaoxiang,louceng,sex,guess_sex,ya,fu)
-        values (#{id},#{title}, #{author}, #{authorId},#{postTime}
+        values (#{id},#{rentStatus},#{rentType},#{title}, #{author}, #{authorId},#{postTime}
         ,#{pictureNum},#{selfReplyNum},#{otherReplyNum},#{guessPrices},#{guessPrice}
         ,#{guessWechat},#{guessPhone} ,#{content},#{replyContent},#{created},#{updated}
         ,#{shiNum}

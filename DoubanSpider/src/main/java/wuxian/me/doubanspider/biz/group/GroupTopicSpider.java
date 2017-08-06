@@ -273,7 +273,7 @@ public class GroupTopicSpider extends BaseDoubanSpider {
         while (matcher.find()) {
 
             String s = matcher.group();
-            if(!list.contains(s)) {
+            if (!list.contains(s)) {
                 list.add(s);
             }
         }
@@ -314,15 +314,6 @@ public class GroupTopicSpider extends BaseDoubanSpider {
 
     private void processParsedTopic(GroupTiezi tiezi) {
 
-        List<Integer> priceList = new ArrayList<Integer>();
-        getGuessedPrice(tiezi.title,priceList);
-        getGuessedPrice(tiezi.content, priceList);
-        getGuessedPrice(tiezi.replyContent, priceList);
-        tiezi.guessPrices = priceList.toString();
-        if (priceList.size() != 0) {
-            tiezi.guessPrice = priceList.get(0);
-        }
-
         List<String> wechatList = new ArrayList<String>();
         getGuessedWechat(tiezi.content, wechatList);
         getGuessedWechat(tiezi.replyContent, wechatList);
@@ -335,6 +326,20 @@ public class GroupTopicSpider extends BaseDoubanSpider {
         getGuessedPhone(tiezi.replyContent, phoneList);
         if (phoneList.size() != 0) {
             tiezi.guessPhone = phoneList.get(0);
+        }
+
+        List<Integer> priceList = new ArrayList<Integer>();
+        getGuessedPrice(tiezi.title, priceList);
+        getGuessedPrice(tiezi.content, priceList);
+        getGuessedPrice(tiezi.replyContent, priceList);
+        tiezi.guessPrices = priceList.toString();
+        for (Integer p : priceList) {
+            if(tiezi.guessWechat != null && tiezi.guessWechat.contains(String.valueOf(p))) {
+                continue;
+            } else if(tiezi.guessPhone != null && tiezi.guessPhone.contains(String.valueOf(p))) {
+                continue;
+            }
+            tiezi.guessPrice = p;
         }
 
         tiezi.shiNum = findNumberIfExist(matchedString(SHI_NUM_PATTERN, tiezi.content));
@@ -352,7 +357,7 @@ public class GroupTopicSpider extends BaseDoubanSpider {
         tiezi.fu = findNumberIfExist(matchedString(FU_PATTERN, yafu));
 
         List<String> sexList = new ArrayList<String>();
-        getGuessedSex(tiezi.title,sexList);
+        getGuessedSex(tiezi.title, sexList);
         getGuessedSex(tiezi.content, sexList);
         getGuessedSex(tiezi.replyContent, sexList);
         if (sexList.size() != 0) {
@@ -368,6 +373,37 @@ public class GroupTopicSpider extends BaseDoubanSpider {
             }
         }
         tiezi.guessSex = sexList.toString();
+
+        String yizu = matchedString(YIZU_PATTERN, tiezi.title + tiezi.content + tiezi.replyContent);
+        if (yizu != null) {
+            tiezi.rentStatus = 1;
+        }
+
+        String liveTime = matchedString(LIVE_TIME_PATTERN,tiezi.title+tiezi.content+tiezi.replyContent);
+
+        if(liveTime != null) {
+            if(liveTime.equals("月末") || liveTime.equals("月底")) {
+                tiezi.guessTime = 31;
+            } else if(liveTime.equals("月初")) {
+                tiezi.guessTime = 1;
+            } else if(liveTime.equals("月中")) {
+                tiezi.guessTime = 15;
+            } else {
+                tiezi.guessTime = Integer.parseInt(liveTime);
+            }
+        }
+
+        String rentType = matchedString(RENT_TYPE_PATTERN,tiezi.title+tiezi.content+tiezi.replyContent);
+        if(rentType != null) {
+
+            if(rentType.contains("出")) {
+                tiezi.rentType = 0;
+            } else if(rentType.contains("转")) {
+                tiezi.rentType = 1;
+            } else {
+                tiezi.rentType = 2;
+            }
+        }
     }
 
     private static final String REG_SEX = "男生|女生|男女|妹纸|妹子";
@@ -405,6 +441,15 @@ public class GroupTopicSpider extends BaseDoubanSpider {
     private static final String REG_FU = "(?<=[付复负])[0-9]?[零一二三四五六七八九]?";
     public static final Pattern FU_PATTERN = Pattern.compile(REG_FU);
 
+    private static final String REG_YIZU = "已租|已出|已找";
+    public static final Pattern YIZU_PATTERN = Pattern.compile(REG_YIZU);
+
+    //入住时间
+    private static final String REG_LIVE_TIME = "月末|月底|月初|月中|\\d+(?=号)";
+    public static final Pattern LIVE_TIME_PATTERN = Pattern.compile(REG_LIVE_TIME);
+
+    private static final String REG_RENT_TYPE = "出租|转租|求?[和合]租";
+    public static final Pattern RENT_TYPE_PATTERN  = Pattern.compile(REG_RENT_TYPE);
 
     public Integer findNumberIfExist(String content) {
         if (content == null) {
