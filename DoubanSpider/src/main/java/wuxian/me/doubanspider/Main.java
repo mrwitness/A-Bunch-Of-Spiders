@@ -45,7 +45,8 @@ public class Main {
         //276209:杭州租房一族
         //145219 杭州出租 租房 中介免入
         //HZhome 杭州租房小组
-        Helper.dispatchSpider(new GroupListSpider("HZhome", 0));
+        //shanghaizufang  上海租房
+        Helper.dispatchSpider(new GroupListSpider("shanghaizufang", 0));
 
         //Helper.dispatchSpider(new GroupTopicSpider(92351212L));
 

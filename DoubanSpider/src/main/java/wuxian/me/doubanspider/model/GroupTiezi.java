@@ -74,8 +74,11 @@ public class GroupTiezi extends BaseModel {
     //0:正在出租 1:已租 已出
     public Integer rentStatus = 0;
 
+    //1:长期 2:短期
+    public Integer rentTime = 0;
+
     //入住时间
-    public Integer guessTime = -1;
+    public Integer guessLiveTime = -1;
 
     @Override
     public String name() {

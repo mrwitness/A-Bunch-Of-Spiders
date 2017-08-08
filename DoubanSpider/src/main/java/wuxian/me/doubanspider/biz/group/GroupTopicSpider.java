@@ -12,7 +12,6 @@ import wuxian.me.doubanspider.biz.BaseDoubanSpider;
 import wuxian.me.doubanspider.model.GroupTiezi;
 import wuxian.me.doubanspider.save.GroupTieziSaver;
 import wuxian.me.doubanspider.util.Helper;
-import wuxian.me.doubanspider.util.SpringBeans;
 import wuxian.me.spidercommon.log.LogManager;
 import wuxian.me.spidercommon.model.HttpUrlNode;
 import wuxian.me.spidercommon.util.StringUtil;
@@ -43,7 +42,7 @@ public class GroupTopicSpider extends BaseDoubanSpider {
     public static HttpUrlNode toUrlNode(GroupTopicSpider spider) {
         HttpUrlNode node = new HttpUrlNode();
         node.baseUrl = API + spider.topicId;
-        node.httpGetParam.put("groupId",spider.groupId);
+        node.httpGetParam.put("groupId", spider.groupId);
         return node;
     }
 
@@ -51,14 +50,15 @@ public class GroupTopicSpider extends BaseDoubanSpider {
         if (!node.baseUrl.contains(API)) {
             return null;
         }
-        return new GroupTopicSpider(node.httpGetParam.get("groupId"),matchedLong(NODE_GROUPID_PATTERN, node.baseUrl));
+        return new GroupTopicSpider(node.httpGetParam.get("groupId"), matchedLong(NODE_GROUPID_PATTERN, node.baseUrl));
     }
 
     private static final String REG_NODE_GROUPID = "(?<=topic/)\\d+";
     private static final Pattern NODE_GROUPID_PATTERN = Pattern.compile(REG_NODE_GROUPID);
 
     private String groupId;
-    public GroupTopicSpider(String groupId,Long topId) {
+
+    public GroupTopicSpider(String groupId, Long topId) {
         this.groupId = groupId;
         this.topicId = topId;
     }
@@ -157,7 +157,7 @@ public class GroupTopicSpider extends BaseDoubanSpider {
     private static final String REG_REPLY = "(?<=\\d\\d:\\d\\d:\\d\\d).+(?=回应)";
     private static final Pattern REPLAY_PATTERN = Pattern.compile(REG_REPLY);
 
-    private static final String REG_MAYBE_PRICE = "[1234]?\\d{3}";
+    private static final String REG_MAYBE_PRICE = "[1-9]?\\d{3}";
     public static final Pattern MAYBE_PRICE_PATTERN = Pattern.compile(REG_MAYBE_PRICE);
 
     private static final String REG_MAYBE_WECHAT = "微信(号)?(是)?[:：]?[0-9A-Za-z]{5,12}|[wW][eE][cC][hH][aA][tT](是)?[:：]?[0-9A-Za-z]{5,12}";
@@ -171,6 +171,9 @@ public class GroupTopicSpider extends BaseDoubanSpider {
 
     private static final String REG_AUTHOR_ID = "(?<=people/)[0-9a-zA-Z]+";
     public static final Pattern AUTHOR_ID_PATTERN = Pattern.compile(REG_AUTHOR_ID);
+
+    private static final String REG_RENTTIME = "长租|短租";
+    public static final Pattern RENTTIME_PATTERN = Pattern.compile(REG_RENTTIME);
 
     private void parseTitle(String data) throws MaybeBlockedException, ParserException {
         Parser parser = new Parser(data);
@@ -387,13 +390,13 @@ public class GroupTopicSpider extends BaseDoubanSpider {
 
         if (liveTime != null) {
             if (liveTime.equals("月末") || liveTime.equals("月底")) {
-                tiezi.guessTime = 31;
+                tiezi.guessLiveTime = 31;
             } else if (liveTime.equals("月初")) {
-                tiezi.guessTime = 1;
+                tiezi.guessLiveTime = 1;
             } else if (liveTime.equals("月中")) {
-                tiezi.guessTime = 15;
+                tiezi.guessLiveTime = 15;
             } else {
-                tiezi.guessTime = Integer.parseInt(liveTime);
+                tiezi.guessLiveTime = Integer.parseInt(liveTime);
             }
         }
 
@@ -406,6 +409,16 @@ public class GroupTopicSpider extends BaseDoubanSpider {
                 tiezi.rentType = 1;
             } else {
                 tiezi.rentType = 2;
+            }
+        }
+
+        String rentTime = matchedString(RENTTIME_PATTERN, tiezi.title + tiezi.content);
+
+        if (rentTime != null) {
+            if (rentTime.contains("短")) {
+                tiezi.rentTime = 2;
+            } else {
+                tiezi.rentTime = 1;
             }
         }
     }
