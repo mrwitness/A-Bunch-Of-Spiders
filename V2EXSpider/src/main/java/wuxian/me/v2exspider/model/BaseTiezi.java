@@ -5,8 +5,6 @@ package wuxian.me.v2exspider.model;
  */
 public class BaseTiezi extends BaseModel {
 
-    public static String tableName = "career";
-
     public Long id;
 
     public String title;

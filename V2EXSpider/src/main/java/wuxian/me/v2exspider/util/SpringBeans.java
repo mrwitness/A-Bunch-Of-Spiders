@@ -5,7 +5,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 import wuxian.me.spidercommon.log.LogManager;
-import wuxian.me.v2exspider.mapper.CareerTieziMapper;
+import wuxian.me.v2exspider.mapper.TieziMapper;
 
 /**
  * Created by wuxian on 24/6/2017.
@@ -18,12 +18,11 @@ public class SpringBeans {
     private static SpringBeans ins;
 
     @Autowired
-    CareerTieziMapper careerTieziMapper;
+    TieziMapper tieziMapper;
 
-    public static CareerTieziMapper careerTieziMapper() {
-        return ins.careerTieziMapper;
+    public static TieziMapper tieziMapper() {
+        return ins.tieziMapper;
     }
-
 
     private SpringBeans() {
     }
@@ -37,6 +36,5 @@ public class SpringBeans {
         }
 
         ins = applicationContext.getBean(SpringBeans.class);
-
     }
 }

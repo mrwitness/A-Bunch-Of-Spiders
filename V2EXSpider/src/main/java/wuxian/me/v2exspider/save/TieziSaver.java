@@ -1,7 +1,7 @@
 package wuxian.me.v2exspider.save;
 
 import com.sun.istack.internal.NotNull;
-import wuxian.me.v2exspider.mapper.CareerTieziMapper;
+import wuxian.me.v2exspider.mapper.TieziMapper;
 import wuxian.me.v2exspider.model.BaseTiezi;
 import wuxian.me.v2exspider.util.SpringBeans;
 
@@ -12,23 +12,23 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created by wuxian on 17/4/2017.
  * <p>
  */
-public class CareerTieziSaver extends BaseSaver<BaseTiezi> {
+public class TieziSaver extends BaseSaver<BaseTiezi> {
 
-    private static CareerTieziSaver instance = null;
+    private static TieziSaver instance = null;
     private Map<Long, BaseTiezi> modelMap = new ConcurrentHashMap<Long, BaseTiezi>();
     private SaveModelThread thread;
 
-    private CareerTieziMapper mapper = SpringBeans.careerTieziMapper();
+    private TieziMapper mapper = SpringBeans.tieziMapper();
 
-    public static CareerTieziSaver getInstance() {
+    public static TieziSaver getInstance() {
         if (instance == null) {
-            instance = new CareerTieziSaver();
+            instance = new TieziSaver();
         }
         return instance;
     }
 
 
-    private CareerTieziSaver() {
+    private TieziSaver() {
         thread = new SaveModelThread(modelMap, GroupConfig.saveSellInternal * 1000, new SaveModelThread.IDatabaseOperator<BaseTiezi>() {
             public void insert(BaseTiezi model) {
                 mapper.insertTiezi(model);
@@ -38,7 +38,7 @@ public class CareerTieziSaver extends BaseSaver<BaseTiezi> {
                 //
             }
         });
-        thread.setName("CareerTieziSaverThread");
+        thread.setName("TieziSaverThread");
         thread.start();
     }
 
