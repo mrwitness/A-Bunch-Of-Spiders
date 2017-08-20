@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class TodayZhiboSpider extends AbstractTodaySpider {
 
-    private static final Long STOP_TIME_INTERVAL = 1000 * 60 * 60 * 6 * 1L;  //只抓6小时以内的新闻
+    private static final Long STOP_TIME_INTERVAL = 1000 * 60 * 60 * 24 * 7 * 2L;  //只抓6小时以内的新闻
 
     public static HttpUrlNode toUrlNode(TodayZhiboSpider spider) {
         HttpUrlNode node = new HttpUrlNode();

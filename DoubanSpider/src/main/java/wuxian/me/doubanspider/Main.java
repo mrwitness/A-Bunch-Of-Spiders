@@ -11,6 +11,7 @@ import wuxian.me.doubanspider.util.SpringBeans;
 import wuxian.me.spidercommon.log.LogManager;
 import wuxian.me.spidercommon.util.SignalManager;
 import wuxian.me.spidersdk.JobManagerConfig;
+import wuxian.me.spidersdk.anti.Fail;
 import wuxian.me.spidersdk.manager.JobManagerFactory;
 
 /**
@@ -46,10 +47,24 @@ public class Main {
         //145219 杭州出租 租房 中介免入
         //HZhome 杭州租房小组
         //shanghaizufang  上海租房
-        Helper.dispatchSpider(new GroupListSpider("shanghaizufang", 0));
+        Helper.dispatchSpider(new GroupListSpider("145219", 0));
+        //Helper.dispatchSpider(new GroupTopicSpider("105921703",105921703L));
 
-        //Helper.dispatchSpider(new GroupTopicSpider(92351212L));
+        /*
+        int i=0;
+        while (true) {
+            if(++i >= 40) {
+                break;
+            }
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
 
-        //LogManager.info(GroupTopicSpider.fromUrlNode(new GroupTopicSpider(187575L).toUrlNode()).toString());
+            }
+
+            JobManagerFactory.getJobManager().fail(new GroupListSpider("1",1), Fail.BLOCK);
+        }
+        */
+
     }
 }

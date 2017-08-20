@@ -21,6 +21,7 @@ public class DoubanSpiderCallback extends SpiderCallback {
 
     public void onFailure(Call call, IOException e) {
         LogManager.error("onFailure: " + getSpider().name());
+
         JobManagerFactory.getJobManager().fail(getSpider(), Fail.MAYBE_BLOCK);
         getSpider().serializeFullLog();
     }

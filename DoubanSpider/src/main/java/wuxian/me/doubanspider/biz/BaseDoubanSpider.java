@@ -21,4 +21,11 @@ public abstract class BaseDoubanSpider extends BaseSpider {
     public String hashString() {
         return name();
     }
+
+    protected boolean checkBlockAndFailThisSpider(int httpCode) {
+        if(super.checkBlockAndFailThisSpider(httpCode)) {
+            return true;
+        }
+        return httpCode == 403;
+    }
 }

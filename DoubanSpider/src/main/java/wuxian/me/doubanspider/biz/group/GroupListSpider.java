@@ -34,7 +34,7 @@ import static wuxian.me.spidercommon.util.StringUtil.removeAllBlanks;
  */
 public class GroupListSpider extends BaseDoubanSpider {
 
-    public static final Long STOP_TIME_INTERNAL = 1000 * 60 * 60 * 3 * 1 * 1L;
+    public static final Long STOP_TIME_INTERNAL = 1000 * 60 * 60 * 12 * 1 * 1L;
 
     private static final String API = "https://www.douban.com/group/";
     private static final String API_POST = "/discussion";

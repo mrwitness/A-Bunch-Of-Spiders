@@ -67,6 +67,13 @@
       <scope>system</scope>
       <systemPath>${project.basedir}/lib/SpiderMaster.jar</systemPath>
     </dependency>
+      <dependency>
+          <groupId>wuxian.me</groupId>
+          <artifactId>wordstatistic</artifactId>
+          <version>1.0</version>
+          <scope>system</scope>
+          <systemPath>${project.basedir}/lib/WordStatistic.jar</systemPath>
+      </dependency>
   </dependencies>
   <properties>
     <spring.version>4.3.8.RELEASE</spring.version>
