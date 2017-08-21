@@ -21,6 +21,8 @@ public class IgnoreSource {
         sourceList.add("下沙");
         sourceList.add("五联东苑");
         sourceList.add("五联西苑");
+        sourceList.add("租房找我");
+        sourceList.add("汽车北站单间");
 
     }
 
