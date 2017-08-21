@@ -71,9 +71,9 @@ public class RentListSpider extends BaseTongchengSpider {
 
         for (int i = 0; i < list1.size(); i++) {
             Node child = list1.elementAt(i);
-            Tiezi id = parseItem(child, (i + 1 == list1.size()));
-            if (id != null) {
-                topList.add(id);
+            Tiezi tiezi = parseItem(child, (i + 1 == list1.size()));
+            if (tiezi != null && !IgnoreSource.shouldIgnore(tiezi.title + tiezi.location)) {
+                topList.add(tiezi);
             }
         }
 
@@ -201,8 +201,6 @@ public class RentListSpider extends BaseTongchengSpider {
             }
         }
 
-        //LogManager.info(tiezi.toString());
-
         if (lastItem && tiezi.postTime != null) {
             if (System.currentTimeMillis() - tiezi.postTime >= 3 * 24 * 3600 * 1000) {
                 //3天后了 不post下一个spider
@@ -210,7 +208,6 @@ public class RentListSpider extends BaseTongchengSpider {
                 Helper.dispatchSpider(new RentListSpider(qu, page + 1));
             }
         }
-        //LogManager.info("time:" + time);
 
         return tiezi.postTime == null ? null : tiezi;
     }

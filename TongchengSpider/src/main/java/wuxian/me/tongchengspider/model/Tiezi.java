@@ -71,6 +71,7 @@ public class Tiezi extends BaseModel {
         return "Tiezi{" +
                 "id='" + id + '\'' +
                 ", title='" + title + '\'' +
+                ", pictureNum=" + pictureNum +
                 ", postTime=" + postTime +
                 ", size=" + size +
                 ", location='" + location + '\'' +
