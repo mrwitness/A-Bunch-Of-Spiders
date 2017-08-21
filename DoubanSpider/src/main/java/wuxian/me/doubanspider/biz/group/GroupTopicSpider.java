@@ -315,6 +315,12 @@ public class GroupTopicSpider extends BaseDoubanSpider {
     }
 
     private void saveTiezi(GroupTiezi tiezi) {
+
+        //过滤掉一定不要的source
+        if (IgnoreSource.shouldIgnore(tiezi.title + tiezi.content)) {
+            return;
+        }
+
         GroupTieziSaver.getInstance().saveModel(tiezi);
     }
 

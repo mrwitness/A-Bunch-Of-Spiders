@@ -23,13 +23,14 @@ public class StatisticMain {
 
     private static void calRightFreedom(MidStatistics mid, int maxNum) {
         FreedomCalculator calculator = new FreedomCalculator();
+        //calculator.setWordAppearanceLimit(3);
         Map<MidStatistics.Word, Double> map = calculator.calRightFreedom(mid);
         sortAndPrint(map, maxNum);
     }
 
     private static void calConcretion(MidStatistics mid, int maxNum) {
         ConcreCalculator calculator = new ConcreCalculator();
-        calculator.setWordAppearanceLimit(3);
+        //calculator.setWordAppearanceLimit(3);
         Map<MidStatistics.Word, Double> map = calculator.calConcretion(mid);
 
         sortAndPrint(map, maxNum);
@@ -37,7 +38,7 @@ public class StatisticMain {
 
     private static void calLeftFreedom(MidStatistics mid, int maxNum) {
         FreedomCalculator calculator = new FreedomCalculator();
-        calculator.setWordAppearanceLimit(3);
+        //calculator.setWordAppearanceLimit(3);
         Map<MidStatistics.Word, Double> map = calculator.calLeftFreedom(mid);
 
         sortAndPrint(map, maxNum);

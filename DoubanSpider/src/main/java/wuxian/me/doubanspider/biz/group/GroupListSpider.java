@@ -130,6 +130,12 @@ public class GroupListSpider extends BaseDoubanSpider {
                 if (child == null) {
                     throw new MaybeBlockedException();
                 }
+                String title = StringUtil.removeAllBlanks(child.toPlainTextString());
+                if(IgnoreSource.shouldIgnore(title)) {  //直接忽略掉不要的源
+
+                    LogManager.info("帖子标题为:"+title+" 这里进行忽略");
+                    return null;
+                }
 
                 topId = matchedLong(TOPIC_ID_PATTERN, removeAllBlanks(child.getText()));
 
