@@ -1,5 +1,6 @@
 package wuxian.me.xueqiuspider;
 
+import org.apdplat.word.util.WordConfTools;
 import wuxian.me.spidercommon.log.LogManager;
 import wuxian.me.wordstatistic.nlp.cut.ConcreCalculator;
 import wuxian.me.wordstatistic.nlp.cut.FreedomCalculator;
@@ -46,40 +47,59 @@ public class StatisticMain {
 
     public static void main(String[] args) throws Exception {
         SpringBeans.init();
-
         List<Zhibo> list = SpringBeans.zhiboMapper().loadZhibo(new Zhibo());
         if (list == null || list.size() == 0) {
             return;
         }
-
         int sentenceNum = 900;  //先测试一百句
         if (list.size() > sentenceNum) {
-            list = new ArrayList<Zhibo>(list.subList(0, sentenceNum));
+            //list = new ArrayList<Zhibo>(list.subList(0, sentenceNum));
         }
 
-        Writings writings = new Writings();
+        WordConfTools.set("dic.path", "classpath:custom_dic.txt,classpath:dic.txt");
+        WordConfTools.set("stopwords.path", "classpath:custom_stopwords.txt");
+        //WordConfTools.set("stopwords.path", "classpath:stopwords.txt,classpath:custom_stopwords.txt");
+
+        Writings writings = new Writings(false);  //入参:hasStopWord 默认文件在stopwords.txt
         StringBuilder content = new StringBuilder("");
         for (int i = 0; i < list.size(); i++) {
             content.append(list.get(i).text);
             writings.addSentence(new Sentence(list.get(i).text));
         }
+        LogManager.info("we get sentence total: " + list.size());
+
+        long start = System.currentTimeMillis();
         writings.generateWordsMap(writings);
-        //printFirst(writings,10);
+        LogManager.info("writings generateWordsMap cost " + (System.currentTimeMillis() - start) + " miliseconds");
+        printFirst(writings, 5000);
 
         MidStatistics mid = new MidStatistics(2);
-        mid.setSingleWordLenLimit(5);  //设置长度为5
+        mid.setSingleWordLenLimit(6);  //设置单个词的最大长度
+        start = System.currentTimeMillis();
         mid.generateWordsMap(writings);
+        LogManager.info("MidStatistics generateWordsMap cost " + (System.currentTimeMillis() - start) + " miliseconds");
+
         LogManager.info("--------------------2dimension appearance------------------");
         printFirst(mid, 100);
 
-        /*
+
         LogManager.info("--------------------concretion------------------");
-        calConcretion(mid,50);
+        start = System.currentTimeMillis();
+        calConcretion(mid, 100);
+        LogManager.info("calConcretion cost " + (System.currentTimeMillis() - start) + " miliseconds");
+
+
         LogManager.info("--------------------left freedom------------------");
-        calLeftFreedom(mid,50);
+        start = System.currentTimeMillis();
+        calLeftFreedom(mid, 100);
+        LogManager.info("calLeftFreedom cost " + (System.currentTimeMillis() - start) + " miliseconds");
+
         LogManager.info("--------------------right freedom------------------");
-        calRightFreedom(mid,50);
-        */
+        start = System.currentTimeMillis();
+        calRightFreedom(mid, 100);
+        LogManager.info("CalRightFreedom cost " + (System.currentTimeMillis() - start) + " miliseconds");
+
+
 
     }
 

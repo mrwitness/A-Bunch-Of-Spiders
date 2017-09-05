@@ -22,7 +22,13 @@ public class IgnoreSource {
         sourceList.add("五联东苑");
         sourceList.add("五联西苑");
         sourceList.add("租房找我");
-        sourceList.add("汽车北站单间");
+        sourceList.add("汽车北站");
+        sourceList.add("转塘");
+        sourceList.add("三墩");
+        sourceList.add("九堡");
+        sourceList.add("北软");
+        sourceList.add("梦想小镇");
+        sourceList.add("未来科技城");
 
     }
 

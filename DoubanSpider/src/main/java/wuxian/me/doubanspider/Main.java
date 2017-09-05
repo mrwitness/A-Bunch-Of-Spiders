@@ -48,8 +48,8 @@ public class Main {
         //HZhome 杭州租房小组
         //shanghaizufang  上海租房
         Helper.dispatchSpider(new GroupListSpider("145219", 0));
-        Helper.dispatchSpider(new GroupListSpider("HZhome", 0));
-        Helper.dispatchSpider(new GroupListSpider("276209", 0));
+        //Helper.dispatchSpider(new GroupListSpider("HZhome", 0));
+        //Helper.dispatchSpider(new GroupListSpider("276209", 0));
         //Helper.dispatchSpider(new GroupTopicSpider("105921703",105921703L));
 
     }
