@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wuxian.me.zhihuspider.mapper.Follow">
+
+    <update id="createNewTableIfNeed" parameterType="wuxian.me.zhihuspider.model.FollowModel">
+        create table if not exists ${tableName} (id BIGINT AUTO_INCREMENT
+        ,actionType TINYINT comment '动作type',target_id VARCHAR(64)
+        ,authorUrl VARCHAR(64) comment 'https://www.zhihu.com/people/',title VARCHAR(96)
+        ,follower_count INTEGER ,comment_count INTEGER,answer_count INTEGER ,articles_count INTEGER
+        ,created_time BIGINT comment '动作产生的时间',created BIGINT
+        , PRIMARY KEY (id),CONSTRAINT type_targetId UNIQUE (actionType,target_id))
+        DEFAULT CHARSET = utf8,
+        ENGINE = InnoDB;
+    </update>
+
+    <insert id="insertFollow" parameterType="wuxian.me.zhihuspider.model.FollowModel">
+        insert into ${tableName} (actionType,target_id
+        ,authorUrl,title,follower_count,comment_count,answer_count,articles_count
+        ,created_time,created)
+        values (#{actionType},#{target_id}
+        ,#{authorUrl},#{title},#{follower_count},#{comment_count},#{answer_count},#{articles_count}
+        ,#{created_time},unix_timestamp());
+    </insert>
+
+</mapper>
