@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wuxian.me.lianjiaspider.mapper.NewQuPriceMapper">
+
+    <delete id="deleteTable" parameterType="wuxian.me.lianjiaspider.model.touming.NewquPrice">
+        drop table if exists ${tableName}
+    </delete>
+
+    <update id="createNewTableIfNeed" parameterType="wuxian.me.lianjiaspider.model.touming.NewquPrice">
+        create table if not exists ${tableName} (id BIGINT AUTO_INCREMENT,qu_id BIGINT,current_price INTEGER
+        ,zhuzhai_7day VARCHAR(64)
+        ,zhuzhai_7price VARCHAR(64),zhuzhai_lastday INTEGER ,zhuzhai_lastprice INTEGER
+        ,shangye_7day VARCHAR(64) ,shangye_7price VARCHAR(64),shangye_lastday INTEGER comment '用数字来表示的时间 格式:MMdd
+        比如326表示03-26',shangye_lastprice INTEGER
+        ,created BIGINT
+        ,PRIMARY KEY (id))
+        DEFAULT CHARSET = utf8,
+        ENGINE = InnoDB;
+    </update>
+
+    <update id="createIndex" parameterType="wuxian.me.lianjiaspider.model.touming.NewquPrice">
+        CREATE INDEX idx_quid ON ${tableName} (qu_id);
+    </update>
+
+    <insert id="insertNewquPrice" parameterType="wuxian.me.lianjiaspider.model.touming.NewquPrice">
+        insert into ${tableName} (qu_id,current_price,zhuzhai_7day,zhuzhai_7price,zhuzhai_lastday,zhuzhai_lastprice
+        ,shangye_7day,shangye_7price,shangye_lastday,shangye_lastprice,created)
+        values (#{quId},#{currentPrice},#{zhuzhai7day},#{zhuzhai7price},#{zhuzhaiLastDay},#{zhuzhaiLastPrice}
+        ,#{shangye7day},#{shangye7price},#{shangyeLastDay},#{shangyeLastPrice},#{created});
+    </insert>
+
+    <select id="loadNewquPrice" resultType="wuxian.me.lianjiaspider.model.touming.NewquPrice">
+        select * from ${tableName} where qu_id = #{qu_id}
+    </select>
+
+</mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wuxian.me.lianjiaspider.mapper.NewQuMapper">
+
+    <delete id="deleteTable" parameterType="wuxian.me.lianjiaspider.model.touming.NewQu">
+        drop table if exists ${tableName}
+    </delete>
+
+    <update id="createNewTableIfNeed" parameterType="wuxian.me.lianjiaspider.model.touming.NewQu">
+        create table if not exists ${tableName} (qu_id BIGINT
+        ,name VARCHAR(16),tuiguang_name VARCHAR(32), district VARCHAR(8), location VARCHAR(40)
+        ,can_sell SMALLINT,all_sell SMALLINT,sell_type TINYINT comment '1:待售 2:在售 3:尾盘',qu_type VARCHAR(24), price INTEGER
+        ,dongtai VARCHAR(128),PRIMARY KEY (qu_id))
+        DEFAULT CHARSET = utf8,
+        ENGINE = InnoDB;
+    </update>
+
+    <update id="createIndex" parameterType="wuxian.me.lianjiaspider.model.touming.NewQu">
+
+    </update>
+
+    <insert id="insertNewQu" parameterType="wuxian.me.lianjiaspider.model.touming.NewQu">
+        insert into ${tableName} (qu_id,name,tuiguang_name,district,location,can_sell,all_sell,sell_type,qu_type,price,dongtai)
+        values (#{quId},#{name},#{tuiguangName},#{district},#{location},#{canSell},#{allSell},#{sellType},#{quType},#{price},#{dongtai});
+    </insert>
+
+    <select id="loadNewQu" resultType="wuxian.me.lianjiaspider.model.touming.NewQu">
+        select * from ${tableName} where qu_id = #{qu_id}
+    </select>
+
+</mapper>
