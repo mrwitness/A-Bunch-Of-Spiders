@@ -1,9 +1,0 @@
-*.iml
-.idea
-out
-target
-.idea/libraries
-.idea/artifacts
-.idea/vcs.xml
-lib
-logs
